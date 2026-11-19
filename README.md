@@ -12,11 +12,19 @@ PiWire is an offline desktop schematic editor for Raspberry Pi projects with a s
 
 | Platform | Download | How to start | Test status |
 | --- | --- | --- | --- |
-| macOS 13+ · Apple Silicon and Intel | [Universal ZIP](https://github.com/LordSteini/PiWire/releases/download/v2.0.1/PiWire-2.0-macOS-universal.zip) | Extract and open `PiWire 2.app`. The app is ad-hoc signed and has no Apple notarization. | App launch and editor tested on Apple Silicon |
+| macOS 13+ · Apple Silicon and Intel | [Universal ZIP](https://github.com/LordSteini/PiWire/releases/download/v2.0.1/PiWire-2.0-macOS-universal.zip) | Extract and open `PiWire 2.app`. See [first launch on macOS](#first-launch-on-macos) if prompted. | App launch and editor tested on Apple Silicon |
 | Windows 10/11 · x64 | [Windows ZIP](https://github.com/LordSteini/PiWire/releases/download/v2.0.1/PiWire-2.0.1-Windows-x64.zip) | Extract the whole archive and open `PiWire.exe`. | Launch test pending |
-| Linux desktop · x86-64 | [Linux TAR.GZ](https://github.com/LordSteini/PiWire/releases/download/v2.0.1/PiWire-2.0.1-Linux-x64.tar.gz) | Extract the archive and run `./start-piwire.sh` from the extracted directory. | Launch test pending |
+| Linux desktop · x86-64 | [Linux TAR.GZ](https://github.com/LordSteini/PiWire/releases/download/v2.0.1/PiWire-2.0.1-Linux-x64.tar.gz) | Extract the archive and run `./start-piwire.sh` from the extracted directory. | Launch confirmed on Zorin OS |
 
 The macOS app reports version **2.0**. The Windows and Linux packages report **2.0.1** and include updated launchers and an updated Electron host. The three builds share the same editor and project format. Linux requires an x86-64 desktop with Chromium runtime libraries and sandbox support. Raspberry Pi OS on ARM is outside the supported download targets.
+
+### First launch on macOS
+
+1. Download the macOS ZIP from this repository’s Releases page, extract it, and double-click `PiWire 2.app` in Finder.
+2. If macOS blocks PiWire because the developer cannot be verified, open **System Settings → Privacy & Security** (**Systemeinstellungen → Datenschutz & Sicherheit**).
+3. In the **Security** section, click **Open Anyway** (**Dennoch öffnen**) for PiWire and confirm the prompt. macOS remembers this exception for the app.
+
+[Apple’s guide to opening apps on macOS](https://support.apple.com/en-us/102445)
 
 ## Draw your first diagram
 
