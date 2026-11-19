@@ -1,0 +1,104 @@
+PiWire 2 — Schaltplanstudio
+
+NEU
+• Elektrische Symbole im Editor statt Bauteilkarten.
+• Symbol und Name nebeneinander in der Seitenleiste.
+• PDF und SVG als schwarze Vektorschaltpläne auf weißem Grund, ohne Raster.
+• Drehbare Symbole, bearbeitbare Werte, eigener GPIO-Ausschnitt.
+• Identischer Editor und identisches Dateiformat auf allen drei Plattformen.
+
+START
+macOS: ZIP entpacken, PiWire 2.app öffnen oder nach Programme ziehen.
+Universal-Binary für Apple Silicon und Intel, macOS 13 oder neuer.
+Lokal ad-hoc signiert, nicht Apple-notarisiert. Falls macOS den Start des
+Downloads blockiert: nach dem ersten Startversuch unter Systemeinstellungen >
+Datenschutz & Sicherheit die konkrete App über „Dennoch öffnen“ freigeben.
+
+Windows: ZIP vollständig entpacken, dann PiWire.exe doppelklicken.
+Alle mitgelieferten Dateien und Ordner zusammenlassen. Für Windows 10/11 x64.
+Kein Installer, keine separate Node.js-Installation erforderlich. Das Paket
+ist nicht mit einem Windows-Herausgeberzertifikat signiert.
+Falls das Fenster nicht erscheint, Diagnose-PiWire.cmd im entpackten Ordner
+starten. Die Ausgabe steht anschließend in %TEMP%\PiWire-Start.log.
+
+Linux: TAR.GZ entpacken, im entpackten Ordner ./start-piwire.sh starten.
+Für aktuelle Desktop-Distributionen auf x86_64 mit GTK/NSS und den üblichen
+Chromium-Laufzeitbibliotheken. Nicht für Raspberry-Pi-ARM. Der Chromium-
+Sandboxbetrieb muss von der Distribution unterstützt werden. Keine Deaktivierung
+der Sandbox erforderlich oder im Startskript enthalten. Bei Problemen das
+Programm als normaler Benutzer aus einer grafischen Sitzung im Terminal starten:
+
+    ./start-piwire.sh --enable-logging > piwire-start.log 2>&1
+
+Meldet Chromium „SUID sandbox helper“ oder „No usable sandbox“, prüfe die
+Sandbox-Unterstützung der Distribution. Ubuntu 24.04 und neuere Ubuntu-
+Versionen können für die PiWire-Binärdatei ein eigenes AppArmor-Profil
+benötigen. Hinweise des Chromium-Projekts:
+https://chromium.googlesource.com/chromium/src/+/main/docs/security/apparmor-userns-restrictions.md
+
+Windows/Linux bündeln Electron 45.3.1 aus den offiziellen Releases. Der Editor
+selbst benötigt zur Laufzeit keine Internetverbindung. Plattformpakete enthalten
+die Lizenz- und Drittanbieterhinweise der Laufzeit. macOS nutzt System-WebKit.
+
+SCHNELLSTART
+1. Links ein Bauteil wählen. In der Mitte ziehen, um es zu positionieren.
+2. Erst einen Anschlusskreis, dann einen zweiten anklicken, um zu verbinden.
+   Zwischenklicks ins Raster setzen Knickpunkte. Esc bricht ab.
+3. Bauteil auswählen. Rechts Name und Wert bearbeiten und „Übernehmen“ drücken.
+4. R oder „Drehen“ dreht ein Symbol um 90°. Der GPIO-Block bleibt aufrecht.
+5. Am Pi unter „Sichtbare Pins“ physische Nummern eintragen, z.B. 1, 11, 25.
+   „1-40“ zeigt alle Pins. BCM-Funktionen stehen direkt neben den Pins.
+   Werden belegte Pins aus der Auswahl entfernt, verschwinden ihre Leitungen.
+6. Mehrere Leitungen dürfen am selben Anschluss enden. Echte gemeinsame
+   Anschlüsse erhalten einen Verbindungspunkt. Reine Kreuzungen sind getrennt.
+7. PDF exportiert auf eine A4-Seite; SVG ist für skalierbare Weiterverarbeitung.
+
+TASTEN
+R: drehen. Entf/Rücktaste: löschen. Esc: Verbindung abbrechen.
+⌘/Strg+S: speichern. ⇧⌘/Strg+S: speichern unter.
+⌘/Strg+Z: rückgängig. ⇧⌘/Strg+Z: wiederholen. ⌘/Strg+D: duplizieren.
+Mausrad: Zoom. Freie Fläche ziehen: Ansicht verschieben. „Einpassen“ zeigt alles.
+
+BEISPIEL
+Beispiel-LED.piwire über „Öffnen“ laden. Das Beispiel verwendet den physischen
+Pin 11 (BCM GPIO17), einen 220-Ω-Widerstand, eine LED und Pin 25 (GND).
+Es übernimmt den Darstellungsstil der Vorlage; deren Pin-26-Beschriftung ist
+nicht unverändert übernommen. Beispiel-Schaltplan.svg zeigt den Exportstil.
+
+UMFANG UND GRENZEN
+26 Vorlagen, eigene Module mit 1–40 Anschlüssen; 200 Bauteile pro Projekt.
+IEC-orientierte Darstellung, keine zertifizierte Normbibliothek. Module sind
+Funktionsblöcke mit generischen Anschlüssen. Kein elektrischer Simulator,
+keine Spannungs-/Stromprüfung, kein Platinenlayout.
+GPIO-Pins gelten für klassische Raspberry-Pi-40-Pin-Header, nicht für Pico.
+GPIO arbeitet mit 3,3 V. Lasten nur mit passenden Treibern und Versorgung
+anschließen; tatsächliche Pinbelegung jedes Moduls am Datenblatt prüfen.
+Automatische Leitungsführung berücksichtigt Bauteilkörper, aber keine Text-
+labels oder andere Leitungen. Bei dichten Anordnungen Knickpunkte setzen.
+Bei eigenen Knickpunkten bleiben diese beim Verschieben eines Bauteils stehen.
+Eigene Module bleiben im jeweiligen Projekt; keine globale Vorlagenverwaltung.
+Kein Autosave. Ungespeicherte Änderungen werden vor Schließen/Projektwechsel
+abgefragt. Große Pläne werden beim einseitigen PDF-Export kleiner skaliert.
+PiWire-1-Projekte können importiert werden; Layout ggf. neu anordnen.
+
+VALIDIERUNG
+macOS-App gestartet; Symbole, Palette, Hinzufügen, Drehen, Rückgängig und
+PDF-Export geprüft. PDF: eine A4-Seite, Vektoren und auslesbarer Text.
+Gemeinsames Datenmodell getestet: 26 Vorlagen, Drehungen, JSON-Roundtrip,
+ungültige Pins, Hindernisumgehung, Text-Escaping und Schwarz-Weiß-Export.
+Windows-PE- und Linux-ELF-Pakete erstellt, Laufzeit-Prüfsummen verifiziert.
+Windows/Linux 2.0.1: Electron-Host und Starter aktualisiert. Für diese
+Pakete wurden Archivstruktur und Datenmodell geprüft. Der Start auf den
+Zielsystemen steht noch aus.
+
+QUELLCODE
+Separates Quellcodepaket: web/ (Editor), mac.swift (Mac-Host), electron/
+(Windows-/Linux-Host), test.cjs und build.py.
+Test: node test.cjs. Build: python3 build.py mac|windows|linux.
+Mac-Build benötigt Apple Command Line Tools. Windows/Linux-Paketierung lädt
+offizielle Electron-Binaries und benötigt Internet, aber keine npm-Pakete.
+
+REFERENZEN
+https://pip-assets.raspberrypi.com/categories/545-raspberry-pi-4-model-b/documents/RP-008341-DS-1-raspberry-pi-4-datasheet.pdf
+https://www.electronjs.org/docs/latest/tutorial/application-distribution
+https://github.com/electron/electron/releases/tag/v45.3.1
