@@ -1,0 +1,90 @@
+{
+  "version": 2,
+  "title": "LED am Raspberry Pi",
+  "parts": [
+    {
+      "id": "b12ccda8-1304-454a-9336-a2b421365aba",
+      "kind": "pi",
+      "name": "Raspberry Pi",
+      "value": "40-Pin-Header",
+      "pins": [],
+      "x": 260,
+      "y": 370,
+      "rotation": 0,
+      "piPins": [
+        1,
+        11,
+        25
+      ]
+    },
+    {
+      "id": "38f68e6d-6a80-4c09-b98f-c30f53c2afa1",
+      "kind": "resistor",
+      "name": "Widerstand",
+      "value": "220 Ω",
+      "pins": [
+        "1",
+        "2"
+      ],
+      "x": 650,
+      "y": 420,
+      "rotation": 90,
+      "piPins": []
+    },
+    {
+      "id": "0db411f5-a438-4f44-b431-aff201c66035",
+      "kind": "led",
+      "name": "LED",
+      "value": "Rot",
+      "pins": [
+        "A",
+        "K"
+      ],
+      "x": 650,
+      "y": 520,
+      "rotation": 90,
+      "piPins": []
+    }
+  ],
+  "wires": [
+    {
+      "id": "523df018-0c4a-42a7-9acd-a4ac6f77314b",
+      "a": {
+        "part": "b12ccda8-1304-454a-9336-a2b421365aba",
+        "pin": "11"
+      },
+      "b": {
+        "part": "38f68e6d-6a80-4c09-b98f-c30f53c2afa1",
+        "pin": "0"
+      },
+      "color": "#23323b",
+      "bends": []
+    },
+    {
+      "id": "c9fdb01e-b207-4650-b5f8-cbc04356724f",
+      "a": {
+        "part": "38f68e6d-6a80-4c09-b98f-c30f53c2afa1",
+        "pin": "1"
+      },
+      "b": {
+        "part": "0db411f5-a438-4f44-b431-aff201c66035",
+        "pin": "0"
+      },
+      "color": "#23323b",
+      "bends": []
+    },
+    {
+      "id": "7660377d-5651-460d-a8c6-f57f68472e25",
+      "a": {
+        "part": "0db411f5-a438-4f44-b431-aff201c66035",
+        "pin": "1"
+      },
+      "b": {
+        "part": "b12ccda8-1304-454a-9336-a2b421365aba",
+        "pin": "25"
+      },
+      "color": "#23323b",
+      "bends": []
+    }
+  ]
+}
