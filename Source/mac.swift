@@ -2,11 +2,17 @@ import Cocoa
 import WebKit
 import UniformTypeIdentifiers
 
+private let projectType = UTType(exportedAs: "de.piwire.project", conformingTo: .json)
+private let symbolType = UTType(exportedAs: "de.piwire.symbol", conformingTo: .json)
+
 final class App: NSObject, NSApplicationDelegate, NSWindowDelegate, WKScriptMessageHandler, WKNavigationDelegate {
     private var window: NSWindow!
     private var web: WKWebView!
     private var file: URL?
     private var pendingFile: URL?
+    private var externalDocuments: [URL] = []
+    private var rendererReady = false
+    private var openingExternalDocument = false
     private var allowClose = false
     private var pdfWeb: WKWebView?
     private var pdfRequest: (id: Int, destination: URL)?
@@ -24,7 +30,8 @@ final class App: NSObject, NSApplicationDelegate, NSWindowDelegate, WKScriptMess
     }
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        defaults.register(defaults: ["language": "system", "autoUpdates": true, "ignoreUpdates": false,
+        let localBuild = Bundle.main.object(forInfoDictionaryKey: "PiWireLocalBuild") as? Bool == true
+        defaults.register(defaults: ["language": "system", "autoUpdates": !localBuild, "ignoreUpdates": false,
                                      "updateFailures": 0, "skippedVersion": ""])
         NSApp.setActivationPolicy(.regular)
         let configuration = WKWebViewConfiguration()
@@ -89,8 +96,13 @@ final class App: NSObject, NSApplicationDelegate, NSWindowDelegate, WKScriptMess
         command(files, text("Speichern", "Save"), "save", "s")
         command(files, text("Speichern unter …", "Save As…"), "saveAs", "s", modifiers: [.command, .shift])
         files.addItem(.separator())
-        command(files, text("PDF exportieren …", "Export PDF…"), "exportPDF")
-        command(files, text("SVG exportieren …", "Export SVG…"), "exportSVG")
+        command(files, text("Projekt umbenennen …", "Rename Project…"), "renameProject")
+        let exportItem = NSMenuItem(title: text("Exportieren", "Export"), action: nil, keyEquivalent: "")
+        let exportMenu = NSMenu(title: exportItem.title)
+        command(exportMenu, "PDF …", "exportPDF")
+        command(exportMenu, "SVG …", "exportSVG")
+        exportItem.submenu = exportMenu
+        files.addItem(exportItem)
         files.addItem(.separator())
         files.addItem(withTitle: text("Fenster schließen", "Close Window"),
                       action: #selector(NSWindow.performClose(_:)), keyEquivalent: "w")
@@ -99,17 +111,18 @@ final class App: NSObject, NSApplicationDelegate, NSWindowDelegate, WKScriptMess
         command(edit, text("Rückgängig", "Undo"), "undo", "z")
         command(edit, text("Wiederholen", "Redo"), "redo", "z", modifiers: [.command, .shift])
         command(edit, text("Duplizieren", "Duplicate"), "duplicate", "d")
+        command(edit, text("Auswahl umbenennen …", "Rename Selection…"), "renameSelection",
+                String(UnicodeScalar(NSF2FunctionKey)!), modifiers: [])
         edit.addItem(.separator())
-        for (title, action, key) in [
-            (text("Ausschneiden", "Cut"), #selector(NSText.cut(_:)), "x"),
-            (text("Kopieren", "Copy"), #selector(NSText.copy(_:)), "c"),
-            (text("Einfügen", "Paste"), #selector(NSText.paste(_:)), "v"),
-            (text("Alles auswählen", "Select All"), #selector(NSText.selectAll(_:)), "a")
-        ] {
-            edit.addItem(withTitle: title, action: action, keyEquivalent: key)
-        }
+        edit.addItem(withTitle: text("Ausschneiden", "Cut"), action: #selector(NSText.cut(_:)), keyEquivalent: "x")
+        command(edit, text("Kopieren", "Copy"), "copyComponent", "c")
+        command(edit, text("Einfügen", "Paste"), "pasteComponent", "v")
+        edit.addItem(withTitle: text("Alles auswählen", "Select All"), action: #selector(NSText.selectAll(_:)), keyEquivalent: "a")
 
         let view = menu(text("Darstellung", "View"))
+        command(view, text("Bauteile ein-/ausblenden", "Toggle Components"), "toggleParts")
+        command(view, text("Eigenschaften ein-/ausblenden", "Toggle Properties"), "toggleInspector")
+        view.addItem(.separator())
         command(view, text("Einpassen", "Fit to View"), "fit")
         command(view, text("Vergrößern", "Zoom In"), "zoomIn")
         command(view, text("Verkleinern", "Zoom Out"), "zoomOut")
@@ -127,7 +140,14 @@ final class App: NSObject, NSApplicationDelegate, NSWindowDelegate, WKScriptMess
 
     @objc private func editorAction(_ sender: NSMenuItem) {
         guard let action = sender.representedObject as? String else { return }
-        web.evaluateJavaScript("window.menuAction('\(action)')")
+        if action == "copyComponent" || action == "pasteComponent" {
+            let selector = action == "copyComponent" ? #selector(NSText.copy(_:)) : #selector(NSText.paste(_:))
+            web.evaluateJavaScript("window.componentClipboard('\(action)')") { result, _ in
+                if result as? Bool != true { NSApp.sendAction(selector, to: nil, from: nil) }
+            }
+        } else {
+            web.evaluateJavaScript("window.menuAction('\(action)')")
+        }
     }
 
     @objc private func quit() { NSApp.terminate(nil) }
@@ -150,12 +170,18 @@ final class App: NSObject, NSApplicationDelegate, NSWindowDelegate, WKScriptMess
         if let value = changes["skippedVersion"] as? String, value.count <= 32 {
             defaults.set(value, forKey: "skippedVersion")
         }
+        for key in ["partsHidden", "inspectorHidden", "tourSeen"] {
+            if let value = changes[key] as? Bool { defaults.set(value, forKey: key) }
+        }
         if language != previousLanguage { buildMenus() }
         return [
             "language": defaults.string(forKey: "language") ?? "system",
             "systemLanguage": systemLanguage,
             "autoUpdates": defaults.bool(forKey: "autoUpdates"),
             "ignoreUpdates": defaults.bool(forKey: "ignoreUpdates"),
+            "partsHidden": defaults.bool(forKey: "partsHidden"),
+            "inspectorHidden": defaults.bool(forKey: "inspectorHidden"),
+            "tourSeen": defaults.bool(forKey: "tourSeen"),
             "updateFailures": defaults.integer(forKey: "updateFailures"),
             "skippedVersion": defaults.string(forKey: "skippedVersion") ?? "",
             "version": Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "",
@@ -173,7 +199,9 @@ final class App: NSObject, NSApplicationDelegate, NSWindowDelegate, WKScriptMess
     private func savePanel(_ name: String, extension ext: String) async -> URL? {
         let panel = NSSavePanel()
         panel.nameFieldStringValue = name + "." + ext
-        panel.allowedContentTypes = [UTType(filenameExtension: ext) ?? .data]
+        let appTypes = ["piwire": projectType, "piwire-symbol": symbolType]
+        panel.allowedContentTypes = [appTypes[ext] ?? UTType(filenameExtension: ext) ?? .data]
+        if appTypes[ext] != nil { panel.isExtensionHidden = false }
         return await panel.beginSheetModal(for: window) == .OK ? panel.url : nil
     }
 
@@ -219,16 +247,32 @@ final class App: NSObject, NSApplicationDelegate, NSWindowDelegate, WKScriptMess
             file = pendingFile
             pendingFile = nil
             reply(id, true)
-        case "open":
-            let panel = NSOpenPanel()
-            panel.allowedContentTypes = [UTType(filenameExtension: "piwire") ?? .json, .json]
-            guard await panel.beginSheetModal(for: window) == .OK, let url = panel.url else { reply(id); return }
-            let contents = try Data(contentsOf: url)
-            guard contents.count <= 10_000_000, let value = String(data: contents, encoding: .utf8) else {
-                reply(id, error: text("Datei zu groß oder ungültig.", "File is too large or invalid."))
-                return
+        case "copyComponent":
+            guard let component = data["text"] as? String, component.utf8.count <= 100_000 else { reply(id, false); return }
+            NSPasteboard.general.clearContents()
+            reply(id, NSPasteboard.general.setString(component, forType: .init("de.piwire.component")))
+        case "pasteComponent":
+            if let component = NSPasteboard.general.string(forType: .init("de.piwire.component")), component.utf8.count <= 100_000 {
+                reply(id, component)
+            } else { reply(id) }
+        case "symbolLibrary":
+            if let value = data["text"] as? String, value.utf8.count <= 2_000_000 {
+                defaults.set(value, forKey: "symbolLibrary")
             }
-            pendingFile = url
+            reply(id, defaults.string(forKey: "symbolLibrary") ?? "[]")
+        case "saveSymbol":
+            guard let value = data["text"] as? String, value.utf8.count <= 100_000,
+                  let destination = await savePanel(data["name"] as? String ?? "Symbol", extension: "piwire-symbol")
+            else { reply(id, false); return }
+            try value.write(to: destination, atomically: true, encoding: .utf8)
+            reply(id, true)
+        case "open", "openSymbol":
+            let isSymbol = action == "openSymbol"
+            let panel = NSOpenPanel()
+            panel.allowedContentTypes = [isSymbol ? symbolType : projectType, .json]
+            guard await panel.beginSheetModal(for: window) == .OK, let url = panel.url else { reply(id); return }
+            let value = try fileText(url)
+            if !isSymbol { pendingFile = url }
             reply(id, ["text": value])
         case "save":
             guard let value = data["text"] as? String, value.utf8.count <= 10_000_000 else {
@@ -270,6 +314,51 @@ final class App: NSObject, NSApplicationDelegate, NSWindowDelegate, WKScriptMess
         }
     }
 
+    private func fileText(_ url: URL) throws -> String {
+        let size = try url.resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0
+        if size <= 10_000_000 {
+            let contents = try Data(contentsOf: url)
+            if contents.count <= 10_000_000, let value = String(data: contents, encoding: .utf8) { return value }
+        }
+        throw NSError(domain: "PiWire", code: 1, userInfo: [
+            NSLocalizedDescriptionKey: text("Datei zu groß oder ungültig.", "File is too large or invalid.")
+        ])
+    }
+
+    func application(_ application: NSApplication, open urls: [URL]) {
+        externalDocuments.append(contentsOf: urls.filter { $0.isFileURL && $0.pathExtension.lowercased() == "piwire" })
+        openQueuedDocuments()
+    }
+
+    private func openQueuedDocuments() {
+        guard rendererReady, !openingExternalDocument, !externalDocuments.isEmpty else { return }
+        openingExternalDocument = true
+        window.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+        Task { @MainActor in
+            defer { openingExternalDocument = false }
+            while !externalDocuments.isEmpty {
+                let url = externalDocuments.removeFirst()
+                do {
+                    let source = try fileText(url)
+                    let opened = try await web.callAsyncJavaScript(
+                        "return await window.openExternalProject(text);",
+                        arguments: ["text": source], in: nil, contentWorld: .page
+                    )
+                    if opened as? Bool == true {
+                        file = url
+                    } else {
+                        // Keep the current project if the user cancels an Open request.
+                        externalDocuments.removeAll()
+                    }
+                } catch {
+                    let alert = NSAlert(error: error)
+                    await alert.beginSheetModal(for: window)
+                }
+            }
+        }
+    }
+
     private func export(_ data: [String: Any], id: Int) async throws {
         guard let svg = data["svg"] as? String, svg.utf8.count <= 20_000_000,
               let type = data["type"] as? String, ["svg", "pdf"].contains(type) else {
@@ -303,6 +392,11 @@ final class App: NSObject, NSApplicationDelegate, NSWindowDelegate, WKScriptMess
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        if webView === web {
+            rendererReady = true
+            openQueuedDocuments()
+            return
+        }
         guard webView === pdfWeb, let request = pdfRequest else { return }
         let configuration = WKPDFConfiguration()
         configuration.rect = CGRect(x: 0, y: 0, width: 595, height: 842)

@@ -1,9 +1,82 @@
 <!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; object-src 'none'"><title>PiWire</title><link rel="stylesheet" href="style.css"></head><body>
-<header><div class="brand">π <strong>PiWire</strong><span data-i18n="Schaltplanstudio">Schaltplanstudio</span></div><div class="actions"><button id="new" data-i18n="Neu">Neu</button><button id="open" data-i18n="Öffnen">Öffnen</button><button id="save" data-i18n="Speichern">Speichern</button><button id="saveAs" data-i18n="Speichern unter">Speichern unter</button><i></i><button id="undo" title="Rückgängig" data-i18n-title="Rückgängig">↶</button><button id="redo" title="Wiederholen" data-i18n-title="Wiederholen">↷</button><i></i><button id="exportSVG">SVG</button><button id="exportPDF" class="primary" data-i18n="PDF exportieren">PDF exportieren</button></div></header>
-<aside><div class="section"><span data-i18n="BAUTEILE">BAUTEILE</span> <small data-i18n="26 Vorlagen">26 Vorlagen</small></div><input id="search" placeholder="Bauteil suchen …" data-i18n-placeholder="Bauteil suchen" aria-label="Bauteil suchen" data-i18n-label="Bauteil suchen"><div id="palette"></div><div class="aside-footer"><span data-i18n="IEC-orientierte Schaltsymbole">IEC-orientierte Schaltsymbole</span><br><span data-i18n="Offline · Keine Simulation">Offline · Keine Simulation</span></div></aside>
-<main><div class="canvasbar"><input id="title" maxlength="200" aria-label="Projekttitel" data-i18n-label="Projekttitel"><div><button id="fit" data-i18n="Einpassen">Einpassen</button><button id="zoomOut">−</button><span id="zoomLabel">100 %</span><button id="zoomIn">+</button><button id="help" data-i18n-label="Hilfe" aria-label="Hilfe">?</button></div></div><div id="stage"><svg id="canvas" xmlns="http://www.w3.org/2000/svg" tabindex="0" aria-label="Schaltplan-Zeichenfläche" data-i18n-label="Schaltplan-Zeichenfläche"><defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".8" fill="#c5d2d0"/></pattern></defs><rect x="-20000" y="-20000" width="40000" height="40000" fill="url(#grid)"/><g id="scene"></g><path id="preview" fill="none" stroke="#008373" stroke-width="2" stroke-dasharray="5 5"/></svg><div class="hint" data-i18n="Anschluss → Anschluss verbindet · Leere Fläche ziehen verschiebt die Ansicht">Anschluss → Anschluss verbindet · Leere Fläche ziehen verschiebt die Ansicht</div></div><footer><span id="status"></span><span id="dirty"></span></footer></main>
-<section id="inspector"><div class="section" data-i18n="EIGENSCHAFTEN">EIGENSCHAFTEN</div><div id="emptyInspector"><div class="empty-symbol">⌁</div><span data-i18n="Bauteil oder Leitung auswählen.">Bauteil oder Leitung auswählen.</span><p><b>R</b> <span data-i18n="dreht ein Bauteil.">dreht ein Bauteil.</span><br><b data-i18n="Entf">Entf</b> <span data-i18n="löscht die Auswahl.">löscht die Auswahl.</span><br><b>Esc</b> <span data-i18n="bricht eine Leitung ab.">bricht eine Leitung ab.</span></p></div><div id="partInspector" hidden><label><span data-i18n="Name">Name</span><input id="partName" maxlength="200"></label><label><span data-i18n="Wert / Beschriftung">Wert / Beschriftung</span><input id="partValue" maxlength="500"></label><label><span id="pinsTitle" data-i18n="Anschlüsse">Anschlüsse</span><input id="partPins"><small id="pinHelp"></small></label><button id="apply" class="primary wide" data-i18n="Übernehmen">Übernehmen</button><div class="row"><button id="rotate" data-i18n="↻ Drehen">↻ Drehen</button><button id="duplicate" data-i18n="Duplizieren">Duplizieren</button></div><button id="deletePart" class="danger wide" data-i18n="Bauteil löschen">Bauteil löschen</button><div id="pinLegend"></div></div><div id="wireInspector" hidden><label><span data-i18n="Leitungsfarbe">Leitungsfarbe</span><input id="wireColor" type="color" value="#23323b"></label><p data-i18n="Der Export verwendet immer schwarze Linien.">Der Export verwendet immer schwarze Linien.</p><button id="autoRoute" class="wide" data-i18n="Automatisch führen">Automatisch führen</button><button id="deleteWire" class="danger wide" data-i18n="Leitung löschen">Leitung löschen</button></div><div class="export-note"><b data-i18n="Export wie ein Schaltplan">Export wie ein Schaltplan</b><p data-i18n="Schwarz auf Weiß, ohne Raster oder Anschlussmarkierungen. Symbole und Texte bleiben Vektoren.">Schwarz auf Weiß, ohne Raster oder Anschlussmarkierungen. Symbole und Texte bleiben Vektoren.</p></div></section>
-<dialog id="helpDialog"><h2 data-i18n="Schaltpläne mit PiWire">Schaltpläne mit PiWire</h2><p data-i18n="Bauteil links wählen und im Raster verschieben. Zwei Anschlusskreise anklicken, um eine Leitung zu zeichnen. Klicks ins Raster setzen eigene Knickpunkte. Esc bricht ab.">Bauteil links wählen und im Raster verschieben. Zwei Anschlusskreise anklicken, um eine Leitung zu zeichnen. Klicks ins Raster setzen eigene Knickpunkte. Esc bricht ab.</p><p data-i18n="R dreht die Auswahl um 90°. Mehrere Leitungen dürfen denselben Anschluss verwenden. Nur gemeinsame Anschlüsse und Verbindungsknoten sind verbunden; reine Kreuzungen bleiben getrennt.">R dreht die Auswahl um 90°. Mehrere Leitungen dürfen denselben Anschluss verwenden. Nur gemeinsame Anschlüsse und Verbindungsknoten sind verbunden; reine Kreuzungen bleiben getrennt.</p><p><span data-i18n="Beim Raspberry Pi bestimmst du unter „Sichtbare Pins“ die physischen Pinnummern, etwa">Beim Raspberry Pi bestimmst du unter „Sichtbare Pins“ die physischen Pinnummern, etwa</span> <b>1, 11, 25</b>. <span data-i18n="Die BCM-Funktion wird daneben angezeigt. Für alle Pins:">Die BCM-Funktion wird daneben angezeigt. Für alle Pins:</span> <b>1-40</b>.</p><p data-i18n="Speichern: ⌘/Strg+S · Rückgängig: ⌘/Strg+Z · Duplizieren: ⌘/Strg+D · Zoom: Mausrad · Ansicht verschieben: freie Fläche ziehen.">Speichern: ⌘/Strg+S · Rückgängig: ⌘/Strg+Z · Duplizieren: ⌘/Strg+D · Zoom: Mausrad · Ansicht verschieben: freie Fläche ziehen.</p><p data-i18n="PDF: eine A4-Seite, automatisch angepasst. SVG: frei skalierbarer Schaltplan. PiWire-1-Dateien lassen sich importieren; ihre Positionen müssen eventuell angepasst werden.">PDF: eine A4-Seite, automatisch angepasst. SVG: frei skalierbarer Schaltplan. PiWire-1-Dateien lassen sich importieren; ihre Positionen müssen eventuell angepasst werden.</p><p class="muted" data-i18n="Planungseditor ohne Simulation oder elektrische Prüfung. Modul-Pins sind generisch. Raspberry-Pi-GPIO: 3,3 V. Lasten über geeignete Treiber anschließen. IEC-orientierte Symbole, keine zertifizierte Normbibliothek.">Planungseditor ohne Simulation oder elektrische Prüfung. Modul-Pins sind generisch. Raspberry-Pi-GPIO: 3,3 V. Lasten über geeignete Treiber anschließen. IEC-orientierte Symbole, keine zertifizierte Normbibliothek.</p><button id="closeHelp" class="primary" data-i18n="Verstanden">Verstanden</button></dialog>
+<header class="editor-toolbar">
+  <div class="toolbar-leading">
+    <button id="toggleParts" aria-controls="partsPane" aria-expanded="true"><span data-i18n="Bauteile">Bauteile</span></button>
+    <div class="toolbar-group">
+      <button id="undo" data-i18n-label="Rückgängig" aria-label="Rückgängig" data-i18n-title="Rückgängig">↶</button>
+      <button id="redo" data-i18n-label="Wiederholen" aria-label="Wiederholen" data-i18n-title="Wiederholen">↷</button>
+    </div>
+  </div>
+  <button id="renameProject" class="project-title" data-i18n-title="Projekt umbenennen">
+    <span id="title"></span>
+    <span aria-hidden="true">✎</span>
+  </button>
+  <div class="toolbar-trailing">
+    <div class="toolbar-group">
+      <button id="zoomOut" data-i18n-label="Verkleinern" aria-label="Verkleinern">−</button>
+      <span id="zoomLabel">100 %</span>
+      <button id="zoomIn" data-i18n-label="Vergrößern" aria-label="Vergrößern">+</button>
+      <button id="fit" data-i18n="Einpassen">Einpassen</button>
+    </div>
+    <button id="toggleInspector" aria-controls="inspector" aria-expanded="true"><span data-i18n="Eigenschaften">Eigenschaften</span></button>
+    <button id="help" data-i18n-label="Hilfe" aria-label="Hilfe" data-i18n-title="Hilfe">?</button>
+  </div>
+  <div hidden>
+    <button id="new"></button><button id="open"></button><button id="save"></button><button id="saveAs"></button>
+    <button id="exportSVG"></button><button id="exportPDF"></button>
+  </div>
+</header>
+<aside id="partsPane"><div class="section"><span data-i18n="BAUTEILE">BAUTEILE</span> <small id="templateCount"></small></div><input id="search" placeholder="Bauteil suchen …" data-i18n-placeholder="Bauteil suchen" aria-label="Bauteil suchen" data-i18n-label="Bauteil suchen"><button id="symbols" data-i18n="Eigene Symbole …">Eigene Symbole …</button><div id="palette"></div></aside>
+<main><div id="stage"><svg id="canvas" xmlns="http://www.w3.org/2000/svg" tabindex="0" aria-label="Schaltplan-Zeichenfläche" data-i18n-label="Schaltplan-Zeichenfläche"><defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".8" fill="#c5d2d0"/></pattern></defs><rect x="-20000" y="-20000" width="40000" height="40000" fill="url(#grid)"/><g id="scene"></g><path id="preview" fill="none" stroke="#008373" stroke-width="2" stroke-dasharray="5 5"/></svg></div><footer><span id="status"></span><span id="dirty"></span></footer></main>
+<section id="inspector"><div class="section" data-i18n="EIGENSCHAFTEN">EIGENSCHAFTEN</div><div id="emptyInspector"><div class="empty-symbol">⌁</div><span data-i18n="Bauteil oder Leitung auswählen.">Bauteil oder Leitung auswählen.</span><p><b>R</b> <span data-i18n="dreht ein Bauteil.">dreht ein Bauteil.</span><br><b data-i18n="Entf">Entf</b> <span data-i18n="löscht die Auswahl.">löscht die Auswahl.</span><br><b>Esc</b> <span data-i18n="bricht eine Leitung ab.">bricht eine Leitung ab.</span></p></div><div id="partInspector" hidden><label><span data-i18n="Name">Name</span><div class="part-name-row"><input id="partName" maxlength="200"><button id="renamePart" type="button" data-i18n-label="Bauteil umbenennen" aria-label="Bauteil umbenennen" data-i18n-title="Bauteil umbenennen">✎</button></div></label><label><span data-i18n="Wert / Beschriftung">Wert / Beschriftung</span><input id="partValue" maxlength="500"></label><label class="inline-check"><input id="partHideName" type="checkbox"><span data-i18n="Name ausblenden">Name ausblenden</span></label><label class="inline-check"><input id="partHideValue" type="checkbox"><span id="hideValueText" data-i18n="Wert ausblenden">Wert ausblenden</span></label><label id="partColorLabel" hidden><span data-i18n="LED-Farbe">LED-Farbe</span><input id="partColor" type="color"></label><label><span id="pinsTitle" data-i18n="Anschlüsse">Anschlüsse</span><input id="partPins"><small id="pinHelp"></small></label><button id="apply" class="primary wide" data-i18n="Übernehmen">Übernehmen</button><div class="row"><button id="rotate" data-i18n="↻ Drehen">↻ Drehen</button><button id="duplicate" data-i18n="Duplizieren">Duplizieren</button></div><button id="deletePart" class="danger wide" data-i18n="Bauteil löschen">Bauteil löschen</button><div id="pinLegend"></div></div><div id="wireInspector" hidden><p data-i18n="Ziehe einen Abschnitt oder einen Eckgriff, um die Leitung zu verschieben.">Ziehe einen Abschnitt oder einen Eckgriff, um die Leitung zu verschieben.</p><label><span data-i18n="Leitungsfarbe">Leitungsfarbe</span><input id="wireColor" type="color" value="#23323b"></label><p data-i18n="Der Export verwendet immer schwarze Linien.">Der Export verwendet immer schwarze Linien.</p><button id="autoRoute" class="wide" data-i18n="Automatisch führen">Automatisch führen</button><button id="deleteWire" class="danger wide" data-i18n="Leitung löschen">Leitung löschen</button></div><div class="export-note"><b data-i18n="Export wie ein Schaltplan">Export wie ein Schaltplan</b><p data-i18n="Schwarz auf Weiß, ohne Raster oder Anschlussmarkierungen. Symbole und Texte bleiben Vektoren.">Schwarz auf Weiß, ohne Raster oder Anschlussmarkierungen. Symbole und Texte bleiben Vektoren.</p></div></section>
+<dialog id="helpDialog" aria-labelledby="helpTitle">
+  <h2 id="helpTitle" data-i18n="PiWire-Hilfe">PiWire-Hilfe</h2>
+  <details open>
+    <summary data-i18n="Ersten Schaltplan zeichnen">Ersten Schaltplan zeichnen</summary>
+    <ol>
+      <li data-i18n="Wähle links ein Bauteil aus und ziehe es auf der Zeichenfläche an die gewünschte Stelle.">Wähle links ein Bauteil aus und ziehe es auf der Zeichenfläche an die gewünschte Stelle.</li>
+      <li data-i18n="Klicke nacheinander auf zwei Anschlüsse, um sie zu verbinden. Klicke dazwischen aufs Raster, um eine Ecke zu setzen.">Klicke nacheinander auf zwei Anschlüsse, um sie zu verbinden. Klicke dazwischen aufs Raster, um eine Ecke zu setzen.</li>
+      <li data-i18n="Klicke oben auf den Projekttitel, um ihn zu ändern. Speichere den Plan über das Dateimenü als .piwire.">Klicke oben auf den Projekttitel, um ihn zu ändern. Speichere den Plan über das Dateimenü als .piwire.</li>
+    </ol>
+  </details>
+  <details>
+    <summary data-i18n="Leitungen und Abzweige">Leitungen und Abzweige</summary>
+    <p data-i18n="Ziehe einen Leitungsabschnitt oder wähle die Leitung aus und ziehe einen Eckgriff. Mit Esc brichst du eine neue Leitung ab.">Ziehe einen Leitungsabschnitt oder wähle die Leitung aus und ziehe einen Eckgriff. Mit Esc brichst du eine neue Leitung ab.</p>
+    <p data-i18n="Ein Klick auf eine Leitung setzt beim Verbinden einen Knoten. Mit Shift-Klick auf eine Leitung beginnst du dort. Eine Lücke an einer Kreuzung kennzeichnet getrennte Leitungen.">Ein Klick auf eine Leitung setzt beim Verbinden einen Knoten. Mit Shift-Klick auf eine Leitung beginnst du dort. Eine Lücke an einer Kreuzung kennzeichnet getrennte Leitungen.</p>
+  </details>
+  <details>
+    <summary data-i18n="Bauteile, GPIO und eigene Symbole">Bauteile, GPIO und eigene Symbole</summary>
+    <p data-i18n="Wähle ein Bauteil aus. Rechts kannst du Name, Wert und sichtbare Beschriftungen bearbeiten. Beim Raspberry Pi kannst du physische Pins einzeln (1, 11, 25) oder als Bereich (1-40) auswählen.">Wähle ein Bauteil aus. Rechts kannst du Name, Wert und sichtbare Beschriftungen bearbeiten. Beim Raspberry Pi kannst du physische Pins einzeln (1, 11, 25) oder als Bereich (1-40) auswählen.</p>
+    <p data-i18n="Unter Eigene Symbole kannst du zeichnen, Anschlüsse setzen und Symbole als .piwire-symbol zum Austausch oder als SVG exportieren.">Unter Eigene Symbole kannst du zeichnen, Anschlüsse setzen und Symbole als .piwire-symbol zum Austausch oder als SVG exportieren.</p>
+  </details>
+  <details>
+    <summary data-i18n="Ansicht, Dateien und Export">Ansicht, Dateien und Export</summary>
+    <p data-i18n="Die Schalter oben blenden die Seitenleisten ein und aus. Ziehe eine freie Fläche, um den Ausschnitt zu verschieben. Mit dem Mausrad zoomst du. Einpassen zeigt den ganzen Plan.">Die Schalter oben blenden die Seitenleisten ein und aus. Ziehe eine freie Fläche, um den Ausschnitt zu verschieben. Mit dem Mausrad zoomst du. Einpassen zeigt den ganzen Plan.</p>
+    <p data-i18n="Eine .piwire-Datei bleibt bearbeitbar. Auf dem Mac kannst du sie im Finder doppelklicken. PDF und SVG findest du im Dateimenü unter Exportieren.">Eine .piwire-Datei bleibt bearbeitbar. Auf dem Mac kannst du sie im Finder doppelklicken. PDF und SVG findest du im Dateimenü unter Exportieren.</p>
+  </details>
+  <details>
+    <summary data-i18n="Tastenkürzel">Tastenkürzel</summary>
+    <dl class="shortcut-list">
+      <dt><kbd>⌘ / Strg</kbd> + <kbd>S</kbd></dt><dd data-i18n="Speichern">Speichern</dd>
+      <dt><kbd>⌘ / Strg</kbd> + <kbd>Z</kbd></dt><dd data-i18n="Rückgängig">Rückgängig</dd>
+      <dt><kbd>⌘ / Strg</kbd> + <kbd>C</kbd> / <kbd>V</kbd></dt><dd data-i18n="Bauteil kopieren / einfügen">Bauteil kopieren / einfügen</dd>
+      <dt><kbd>F2</kbd></dt><dd data-i18n="Auswahl oder Projekt umbenennen">Auswahl oder Projekt umbenennen</dd>
+      <dt><kbd>R</kbd></dt><dd data-i18n="Ausgewähltes Bauteil drehen">Ausgewähltes Bauteil drehen</dd>
+      <dt><kbd data-i18n="Entf">Entf</kbd></dt><dd data-i18n="Auswahl löschen">Auswahl löschen</dd>
+    </dl>
+  </details>
+  <div class="dialog-actions"><button id="closeHelp" class="primary" data-i18n="Schließen">Schließen</button></div>
+</dialog>
+<dialog id="renameDialog" aria-labelledby="renameHeading">
+  <form id="renameForm" method="dialog">
+    <h2 id="renameHeading"></h2>
+    <label><span data-i18n="Name">Name</span><input id="renameValue" maxlength="200" required></label>
+    <div class="dialog-actions">
+      <button id="cancelRename" type="button" data-i18n="Abbrechen">Abbrechen</button>
+      <button class="primary" value="save" data-i18n="Umbenennen">Umbenennen</button>
+    </div>
+  </form>
+</dialog>
 <dialog id="settingsDialog" aria-labelledby="settingsHeading">
   <h2 id="settingsHeading" data-i18n="Einstellungen">Einstellungen</h2>
   <label><span data-i18n="Sprache">Sprache</span>
@@ -18,6 +91,9 @@
   </label>
   <p id="updateDisabled" data-i18n="Die Updateprüfung wurde dauerhaft deaktiviert." hidden></p>
   <p><span data-i18n="Versionsnummer">Version</span> <span id="appVersion"></span></p>
+  <div class="dialog-actions">
+    <button id="restartTour" data-i18n="Einführung starten">Einführung starten</button>
+  </div>
   <button id="closeSettings" class="primary" data-i18n="Schließen">Schließen</button>
 </dialog>
 <dialog id="saveAsDialog" aria-labelledby="saveAsHeading">
@@ -41,4 +117,56 @@
   <p id="updateDetails"></p>
   <div id="updateActions" class="dialog-actions"></div>
 </dialog>
-<div id="toast" role="status"></div><script src="i18n.js"></script><script src="core.js"></script><script src="app.js"></script><script src="updates.js"></script></body></html>
+<dialog id="symbolDialog" aria-labelledby="symbolHeading">
+  <h2 id="symbolHeading" data-i18n="Eigene Symbole">Eigene Symbole</h2>
+  <div class="symbol-top">
+    <label><span data-i18n="Bibliothek">Bibliothek</span><select id="symbolSelection"></select></label>
+    <label><span data-i18n="Name">Name</span><input id="symbolName" maxlength="100"></label>
+  </div>
+  <div class="symbol-workspace">
+    <div>
+      <label><span data-i18n="Werkzeug">Werkzeug</span><select id="symbolTool">
+        <option value="line" data-i18n="Linie">Linie</option>
+        <option value="rect" data-i18n="Rechteck">Rechteck</option>
+        <option value="ellipse" data-i18n="Ellipse">Ellipse</option>
+        <option value="pin" data-i18n="Anschluss">Anschluss</option>
+      </select></label>
+      <div id="symbolPinControls" hidden>
+        <label><span data-i18n="Pin-Name">Pin-Name</span><input id="symbolPinName" maxlength="80"></label>
+        <label><span data-i18n="Anschlussrichtung">Anschlussrichtung</span><select id="symbolPinDirection">
+          <option value="left" data-i18n="Links">Links</option>
+          <option value="right" data-i18n="Rechts">Rechts</option>
+          <option value="up" data-i18n="Oben">Oben</option>
+          <option value="down" data-i18n="Unten">Unten</option>
+        </select></label>
+      </div>
+      <button id="undoSymbol" data-i18n="Rückgängig">Rückgängig</button>
+    </div>
+    <svg id="symbolCanvas" viewBox="-110 -110 220 220" data-i18n-label="Symbol-Zeichenfläche">
+      <defs><pattern id="symbolGrid" width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="0" cy="0" r=".7" fill="#acc4bc"/></pattern></defs>
+      <rect x="-100" y="-100" width="200" height="200" fill="url(#symbolGrid)" stroke="#dde5e3"/>
+      <g id="symbolDrawing" fill="none" stroke="#172a32" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <p id="symbolFeedback" role="status"></p>
+  <div class="dialog-actions">
+    <button id="importSymbol" data-i18n="Importieren …">Importieren …</button>
+    <button id="exportSymbol" data-i18n="Symbol exportieren …">Symbol exportieren …</button>
+    <button id="exportSymbolSVG" data-i18n="SVG exportieren">SVG exportieren</button>
+    <button id="closeSymbols" data-i18n="Schließen">Schließen</button>
+    <button id="storeSymbol" class="primary" data-i18n="In Bibliothek speichern">In Bibliothek speichern</button>
+  </div>
+</dialog>
+<section id="tourPanel" aria-labelledby="tourTitle" hidden>
+  <div class="tour-copy">
+    <p id="tourProgress"></p>
+    <h2 id="tourTitle" tabindex="-1"></h2>
+    <p id="tourDescription"></p>
+  </div>
+  <div class="tour-actions">
+    <button id="tourExit" data-i18n="Tour abbrechen">Tour abbrechen</button>
+    <button id="tourBack" data-i18n="Zurück">Zurück</button>
+    <button id="tourNext" class="primary" data-i18n="Weiter">Weiter</button>
+  </div>
+</section>
+<div id="toast" role="status"></div><script src="i18n.js"></script><script src="core.js"></script><script src="app.js"></script><script src="symbols.js"></script><script src="tour.js"></script><script src="updates.js"></script></body></html>

@@ -3,7 +3,7 @@ setlocal
 set "LOG=%TEMP%\PiWire-Start.log"
 set "CHROMIUM_LOG=%TEMP%\PiWire-Chromium-%RANDOM%-%RANDOM%.log"
 pushd "%~dp0" || exit /b 1
->"%LOG%" echo PiWire 2.1.0
+>"%LOG%" echo PiWire 2.2.0
 if not exist "PiWire.exe" goto incomplete
 if not exist "resources\app\web\index.html" goto incomplete
 start "" /wait /b "%~dp0PiWire.exe" --enable-logging=file "--log-file=%CHROMIUM_LOG%" >>"%LOG%" 2>&1

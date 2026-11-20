@@ -39,6 +39,9 @@ function preferences(changes = {}) {
   if (typeof changes.skippedVersion === 'string' && changes.skippedVersion.length <= 32) {
     settings.skippedVersion = changes.skippedVersion;
   }
+  for (const key of ['partsHidden', 'inspectorHidden', 'tourSeen']) {
+    if (typeof changes[key] === 'boolean') settings[key] = changes[key];
+  }
   if (Object.keys(changes).length) {
     const destination = preferencesPath();
     fs.mkdirSync(path.dirname(destination), {recursive: true});

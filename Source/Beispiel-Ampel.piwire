@@ -1,0 +1,396 @@
+{
+  "version": 2,
+  "title": "Beispiel: Ampel mit Fußgängertaster",
+  "parts": [
+    {
+      "id": "af4ab899-4b03-4531-87b8-cb008ad27798",
+      "kind": "pi",
+      "name": "Raspberry Pi",
+      "value": "40-Pin-Header",
+      "pins": [],
+      "x": 260,
+      "y": 460,
+      "rotation": 0,
+      "piPins": [
+        11,
+        13,
+        15,
+        16,
+        25
+      ]
+    },
+    {
+      "id": "948ef838-4536-49f5-a426-b9e653b64c55",
+      "kind": "resistor",
+      "name": "Widerstand",
+      "value": "330 Ω",
+      "pins": [
+        "1",
+        "2"
+      ],
+      "x": 540,
+      "y": 260,
+      "rotation": 0,
+      "piPins": [],
+      "hideName": true
+    },
+    {
+      "id": "d4f4e866-2d59-4558-afc3-d852ec098841",
+      "kind": "led",
+      "name": "LED",
+      "value": "Rot",
+      "pins": [
+        "A",
+        "K"
+      ],
+      "x": 720,
+      "y": 260,
+      "rotation": 0,
+      "piPins": [],
+      "color": "#bd2c43"
+    },
+    {
+      "id": "d97102dc-1c86-49ed-8055-9c2acba92163",
+      "kind": "junction",
+      "name": "Verbindungsknoten",
+      "value": "",
+      "pins": [
+        "1"
+      ],
+      "x": 880,
+      "y": 260,
+      "rotation": 0,
+      "piPins": []
+    },
+    {
+      "id": "1f3d9337-933e-4611-b0b7-afca2da418b8",
+      "kind": "resistor",
+      "name": "Widerstand",
+      "value": "330 Ω",
+      "pins": [
+        "1",
+        "2"
+      ],
+      "x": 540,
+      "y": 360,
+      "rotation": 0,
+      "piPins": [],
+      "hideName": true
+    },
+    {
+      "id": "b177d328-435c-4191-9b56-4b44cad4c8e7",
+      "kind": "led",
+      "name": "LED",
+      "value": "Gelb",
+      "pins": [
+        "A",
+        "K"
+      ],
+      "x": 720,
+      "y": 360,
+      "rotation": 0,
+      "piPins": [],
+      "color": "#a77312"
+    },
+    {
+      "id": "c71b89ae-0b83-409f-a6da-01a921ebac15",
+      "kind": "junction",
+      "name": "Verbindungsknoten",
+      "value": "",
+      "pins": [
+        "1"
+      ],
+      "x": 880,
+      "y": 360,
+      "rotation": 0,
+      "piPins": []
+    },
+    {
+      "id": "26f72389-a0a9-4aac-b850-02b8a05c5063",
+      "kind": "resistor",
+      "name": "Widerstand",
+      "value": "330 Ω",
+      "pins": [
+        "1",
+        "2"
+      ],
+      "x": 540,
+      "y": 460,
+      "rotation": 0,
+      "piPins": [],
+      "hideName": true
+    },
+    {
+      "id": "1541ed5f-e80f-4acc-bf0e-3de2c1130599",
+      "kind": "led",
+      "name": "LED",
+      "value": "Grün",
+      "pins": [
+        "A",
+        "K"
+      ],
+      "x": 720,
+      "y": 460,
+      "rotation": 0,
+      "piPins": [],
+      "color": "#087953"
+    },
+    {
+      "id": "4a1d6c48-9e14-4e80-985a-0edc8d5abd7b",
+      "kind": "junction",
+      "name": "Verbindungsknoten",
+      "value": "",
+      "pins": [
+        "1"
+      ],
+      "x": 880,
+      "y": 460,
+      "rotation": 0,
+      "piPins": []
+    },
+    {
+      "id": "fd29731b-d12e-4a72-9570-28aa31fcaf2a",
+      "kind": "button",
+      "name": "Fußgängertaster",
+      "value": "",
+      "pins": [
+        "1",
+        "2"
+      ],
+      "x": 630,
+      "y": 560,
+      "rotation": 0,
+      "piPins": []
+    },
+    {
+      "id": "060a1e13-c3a9-42c8-81c1-003878fda80f",
+      "kind": "junction",
+      "name": "Verbindungsknoten",
+      "value": "",
+      "pins": [
+        "1"
+      ],
+      "x": 880,
+      "y": 560,
+      "rotation": 0,
+      "piPins": []
+    }
+  ],
+  "wires": [
+    {
+      "id": "4304f6cd-74eb-404e-84b5-2420745a32b4",
+      "a": {
+        "part": "af4ab899-4b03-4531-87b8-cb008ad27798",
+        "pin": "11"
+      },
+      "b": {
+        "part": "948ef838-4536-49f5-a426-b9e653b64c55",
+        "pin": "0"
+      },
+      "color": "#246e97",
+      "manual": true,
+      "bends": []
+    },
+    {
+      "id": "d7ca7ec1-6c30-45b2-af9f-86fd832ff968",
+      "a": {
+        "part": "948ef838-4536-49f5-a426-b9e653b64c55",
+        "pin": "1"
+      },
+      "b": {
+        "part": "d4f4e866-2d59-4558-afc3-d852ec098841",
+        "pin": "0"
+      },
+      "color": "#246e97",
+      "manual": true,
+      "bends": []
+    },
+    {
+      "id": "d344ad14-4803-42e5-b3eb-a1bcd503fc47",
+      "a": {
+        "part": "d4f4e866-2d59-4558-afc3-d852ec098841",
+        "pin": "1"
+      },
+      "b": {
+        "part": "d97102dc-1c86-49ed-8055-9c2acba92163",
+        "pin": "0"
+      },
+      "color": "#374953",
+      "manual": true,
+      "bends": []
+    },
+    {
+      "id": "f354117e-cbdc-4edb-831f-26e7b3a1f62c",
+      "a": {
+        "part": "af4ab899-4b03-4531-87b8-cb008ad27798",
+        "pin": "13"
+      },
+      "b": {
+        "part": "1f3d9337-933e-4611-b0b7-afca2da418b8",
+        "pin": "0"
+      },
+      "color": "#246e97",
+      "manual": true,
+      "bends": []
+    },
+    {
+      "id": "0ae23407-3f78-466c-bd85-96e28cd61a2e",
+      "a": {
+        "part": "1f3d9337-933e-4611-b0b7-afca2da418b8",
+        "pin": "1"
+      },
+      "b": {
+        "part": "b177d328-435c-4191-9b56-4b44cad4c8e7",
+        "pin": "0"
+      },
+      "color": "#246e97",
+      "manual": true,
+      "bends": []
+    },
+    {
+      "id": "f356fa56-dcf9-4086-9890-f5c08765c067",
+      "a": {
+        "part": "b177d328-435c-4191-9b56-4b44cad4c8e7",
+        "pin": "1"
+      },
+      "b": {
+        "part": "c71b89ae-0b83-409f-a6da-01a921ebac15",
+        "pin": "0"
+      },
+      "color": "#374953",
+      "manual": true,
+      "bends": []
+    },
+    {
+      "id": "577a6736-dd93-4540-840e-3612130137cf",
+      "a": {
+        "part": "d97102dc-1c86-49ed-8055-9c2acba92163",
+        "pin": "0"
+      },
+      "b": {
+        "part": "c71b89ae-0b83-409f-a6da-01a921ebac15",
+        "pin": "0"
+      },
+      "color": "#374953",
+      "manual": true,
+      "bends": []
+    },
+    {
+      "id": "91ff5520-e753-4e52-8c0a-387ad0c8038e",
+      "a": {
+        "part": "af4ab899-4b03-4531-87b8-cb008ad27798",
+        "pin": "15"
+      },
+      "b": {
+        "part": "26f72389-a0a9-4aac-b850-02b8a05c5063",
+        "pin": "0"
+      },
+      "color": "#246e97",
+      "manual": true,
+      "bends": []
+    },
+    {
+      "id": "ad60f12a-0ed9-4164-8d63-afaf0eef956a",
+      "a": {
+        "part": "26f72389-a0a9-4aac-b850-02b8a05c5063",
+        "pin": "1"
+      },
+      "b": {
+        "part": "1541ed5f-e80f-4acc-bf0e-3de2c1130599",
+        "pin": "0"
+      },
+      "color": "#246e97",
+      "manual": true,
+      "bends": []
+    },
+    {
+      "id": "2534e20a-7bef-446a-9a66-6c2181c1ce77",
+      "a": {
+        "part": "1541ed5f-e80f-4acc-bf0e-3de2c1130599",
+        "pin": "1"
+      },
+      "b": {
+        "part": "4a1d6c48-9e14-4e80-985a-0edc8d5abd7b",
+        "pin": "0"
+      },
+      "color": "#374953",
+      "manual": true,
+      "bends": []
+    },
+    {
+      "id": "08e92b3c-472e-44af-80f8-0b1e9fe29a71",
+      "a": {
+        "part": "c71b89ae-0b83-409f-a6da-01a921ebac15",
+        "pin": "0"
+      },
+      "b": {
+        "part": "4a1d6c48-9e14-4e80-985a-0edc8d5abd7b",
+        "pin": "0"
+      },
+      "color": "#374953",
+      "manual": true,
+      "bends": []
+    },
+    {
+      "id": "6c188151-3522-4740-a6ad-053a22819357",
+      "a": {
+        "part": "af4ab899-4b03-4531-87b8-cb008ad27798",
+        "pin": "16"
+      },
+      "b": {
+        "part": "fd29731b-d12e-4a72-9570-28aa31fcaf2a",
+        "pin": "0"
+      },
+      "color": "#246e97",
+      "manual": true,
+      "bends": []
+    },
+    {
+      "id": "eef5d746-a545-4580-b887-6e3c4ae2d349",
+      "a": {
+        "part": "fd29731b-d12e-4a72-9570-28aa31fcaf2a",
+        "pin": "1"
+      },
+      "b": {
+        "part": "060a1e13-c3a9-42c8-81c1-003878fda80f",
+        "pin": "0"
+      },
+      "color": "#374953",
+      "manual": true,
+      "bends": []
+    },
+    {
+      "id": "a15a80cc-25f4-4a0a-9b2f-6b54ed5fa4da",
+      "a": {
+        "part": "4a1d6c48-9e14-4e80-985a-0edc8d5abd7b",
+        "pin": "0"
+      },
+      "b": {
+        "part": "060a1e13-c3a9-42c8-81c1-003878fda80f",
+        "pin": "0"
+      },
+      "color": "#374953",
+      "manual": true,
+      "bends": []
+    },
+    {
+      "id": "68039965-420e-40fc-8238-8461f2d64a98",
+      "a": {
+        "part": "060a1e13-c3a9-42c8-81c1-003878fda80f",
+        "pin": "0"
+      },
+      "b": {
+        "part": "af4ab899-4b03-4531-87b8-cb008ad27798",
+        "pin": "25"
+      },
+      "color": "#374953",
+      "manual": true,
+      "bends": [
+        {
+          "x": 880,
+          "y": 660
+        }
+      ]
+    }
+  ]
+}

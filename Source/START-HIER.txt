@@ -1,12 +1,11 @@
-PiWire 2.1.0 — Schaltplanstudio
+PiWire 2.2.0 — Schaltplanstudio
 
 NEU
-• Deutsch und Englisch mit Wahl der Sprache in den Einstellungen.
-• Automatische Suche nach GitHub-Updates beim Start.
-• „Speichern unter“ mit Formatwahl: PiWire-Projekt, PDF oder SVG.
-• PDF und SVG als schwarze Vektorschaltpläne auf weißem Grund, ohne Raster.
-• Drehbare Symbole, bearbeitbare Werte, eigener GPIO-Ausschnitt.
-• Identischer Editor und identisches Dateiformat auf allen drei Plattformen.
+• Einführung mit Ampelschaltung und Fußgängertaster beim ersten Start.
+• Klappbare Seitenleisten, gegliederte Hilfe und direktes Umbenennen.
+• Ziehbare Leitungsecken, Abzweige und automatische Verbindungsknoten.
+• 34 Vorlagen, farbige LEDs und ein Editor für eigene Symbole.
+• PiWire-Projektdateien mit Finder-Zuordnung und Miniatur auf dem Mac.
 
 START
 macOS: DMG öffnen, PiWire.app nach Programme ziehen und dort starten.
@@ -61,35 +60,36 @@ R: drehen. Entf/Rücktaste: löschen. Esc: Verbindung abbrechen.
 Mausrad: Zoom. Freie Fläche ziehen: Ansicht verschieben. „Einpassen“ zeigt alles.
 
 BEISPIEL
-Beispiel-LED.piwire über „Öffnen“ laden. Das Beispiel verwendet den physischen
+Beispiel-Ampel.piwire oder Beispiel-LED.piwire über „Öffnen“ laden. Das Beispiel verwendet den physischen
 Pin 11 (BCM GPIO17), einen 220-Ω-Widerstand, eine LED und Pin 25 (GND).
 Es übernimmt den Darstellungsstil der Vorlage; deren Pin-26-Beschriftung ist
 nicht unverändert übernommen. Beispiel-Schaltplan.svg zeigt den Exportstil.
 
 UMFANG UND GRENZEN
-26 Vorlagen, eigene Module mit 1–40 Anschlüssen; 200 Bauteile pro Projekt.
+34 Vorlagen, eigene Module mit 1–40 Anschlüssen; 200 Bauteile pro Projekt.
 IEC-orientierte Darstellung, keine zertifizierte Normbibliothek. Module sind
 Funktionsblöcke mit generischen Anschlüssen. Kein elektrischer Simulator,
 keine Spannungs-/Stromprüfung, kein Platinenlayout.
 GPIO-Pins gelten für klassische Raspberry-Pi-40-Pin-Header, nicht für Pico.
 GPIO arbeitet mit 3,3 V. Lasten nur mit passenden Treibern und Versorgung
 anschließen; tatsächliche Pinbelegung jedes Moduls am Datenblatt prüfen.
-Automatische Leitungsführung berücksichtigt Bauteilkörper, aber keine Text-
-labels oder andere Leitungen. Bei dichten Anordnungen Knickpunkte setzen.
+Automatische Leitungsführung berücksichtigt Bauteilkörper und Leitungswege.
+Bei dichten Anordnungen lassen sich Segmente und Knickpunkte nachziehen.
 Bei eigenen Knickpunkten bleiben diese beim Verschieben eines Bauteils stehen.
-Eigene Module bleiben im jeweiligen Projekt; keine globale Vorlagenverwaltung.
+Eigene Symbole können in der lokalen Palette und als .piwire-symbol gespeichert werden.
 Kein Autosave. Ungespeicherte Änderungen werden vor Schließen/Projektwechsel
 abgefragt. Große Pläne werden beim einseitigen PDF-Export kleiner skaliert.
 PiWire-1-Projekte können importiert werden; Layout ggf. neu anordnen.
+Das vollständige Handbuch: https://github.com/LordSteini/PiWire/blob/main/docs/handbuch.md
 
 VALIDIERUNG
 macOS-App gestartet; Symbole, Palette, Hinzufügen, Drehen, Rückgängig und
 PDF-Export geprüft. PDF: eine A4-Seite, Vektoren und auslesbarer Text.
-Gemeinsames Datenmodell getestet: 26 Vorlagen, Drehungen, JSON-Roundtrip,
+Gemeinsames Datenmodell getestet: 34 Vorlagen, Drehungen, JSON-Roundtrip,
 ungültige Pins, Hindernisumgehung, Text-Escaping und Schwarz-Weiß-Export.
 Windows-PE- und Linux-ELF-Pakete erstellt, Laufzeit-Prüfsummen verifiziert.
 Für Windows und Linux wurden Archivstruktur und Datenmodell geprüft.
-Der Start von Version 2.1.0 auf den Zielsystemen steht noch aus.
+Der Start von Version 2.2.0 auf den Zielsystemen steht noch aus.
 
 QUELLCODE
 Quellcode auf GitHub: web/ (Editor), mac*.swift (Mac-Host), electron/

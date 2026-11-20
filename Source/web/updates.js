@@ -50,7 +50,7 @@ function renderSettings() {
 function applyLanguage() {
   localizeEditor(preferences.language === 'system' ? preferences.systemLanguage : preferences.language);
   if (startupProject === doc && JSON.stringify(doc) === saved && !undo.length && !redo.length) {
-    doc = C.example();
+    doc = C.blankProject();
     startupProject = doc;
     saved = JSON.stringify(doc);
     selected = null;
@@ -97,12 +97,21 @@ if (typeof document !== 'undefined') {
 
   native('preferences').then(async initial => {
     preferences = initial;
+    restorePanelLayout(initial);
     applyLanguage();
+    if (!initial.tourSeen && startupProject === doc && !undo.length && JSON.stringify(doc) === saved) {
+      startTour(true);
+      try { await setPreferences({tourSeen:true}); } catch {}
+    }
     await checkForUpdate();
   }).catch(() => {});
 }
 
 function updatePrompt(title, details, buttons) {
+  if (tourPreview) {
+    document.addEventListener('piwire-tour-finished', () => updatePrompt(title, details, buttons), {once:true});
+    return;
+  }
   const dialog = $('updateDialog');
   $('updateHeading').textContent = tr(title);
   $('updateDetails').textContent = details;

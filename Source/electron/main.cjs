@@ -1,4 +1,4 @@
-const {app,BrowserWindow,ipcMain,dialog,Menu}=require('electron');const fs=require('node:fs/promises'),path=require('node:path');let win,file=null,pendingFile=null,allowClose=false;
+const {app,BrowserWindow,ipcMain,dialog,Menu,clipboard}=require('electron');const fs=require('node:fs/promises'),path=require('node:path');let win,file=null,pendingFile=null,allowClose=false;
 const updates = require('./updates.cjs');
 const {preferences} = require('./preferences.cjs');
 let activeLanguage = 'en';
@@ -32,8 +32,11 @@ function buildMenus() {
         entry('Speichern', 'Save', 'save', 'Ctrl+S'),
         entry('Speichern unter …', 'Save As…', 'saveAs', 'Ctrl+Shift+S'),
         {type: 'separator'},
-        entry('PDF exportieren …', 'Export PDF…', 'exportPDF'),
-        entry('SVG exportieren …', 'Export SVG…', 'exportSVG'),
+        entry('Projekt umbenennen …', 'Rename Project…', 'renameProject'),
+        {label: label('Exportieren', 'Export'), submenu: [
+          entry('PDF …', 'PDF…', 'exportPDF'),
+          entry('SVG …', 'SVG…', 'exportSVG'),
+        ]},
         {type: 'separator'},
         entry('Einstellungen …', 'Settings…', 'settings', 'Ctrl+,'),
         {label: label('Beenden', 'Quit'), click: () => win.close()},
@@ -45,16 +48,26 @@ function buildMenus() {
         entry('Rückgängig', 'Undo', 'undo', 'Ctrl+Z'),
         entry('Wiederholen', 'Redo', 'redo', 'Ctrl+Shift+Z'),
         entry('Duplizieren', 'Duplicate', 'duplicate', 'Ctrl+D'),
+        entry('Auswahl umbenennen …', 'Rename Selection…', 'renameSelection', 'F2'),
         {type: 'separator'},
         {role: 'cut', label: label('Ausschneiden', 'Cut')},
-        {role: 'copy', label: label('Kopieren', 'Copy')},
-        {role: 'paste', label: label('Einfügen', 'Paste')},
+        {
+          label: label('Kopieren', 'Copy'), accelerator: 'Ctrl+C',
+          click: async () => { if (!await win.webContents.executeJavaScript("window.componentClipboard('copyComponent')")) win.webContents.copy(); },
+        },
+        {
+          label: label('Einfügen', 'Paste'), accelerator: 'Ctrl+V',
+          click: async () => { if (!await win.webContents.executeJavaScript("window.componentClipboard('pasteComponent')")) win.webContents.paste(); },
+        },
         {role: 'selectAll', label: label('Alles auswählen', 'Select All')},
       ],
     },
     {
       label: label('Ansicht', 'View'),
       submenu: [
+        entry('Bauteile ein-/ausblenden', 'Toggle Components', 'toggleParts'),
+        entry('Eigenschaften ein-/ausblenden', 'Toggle Properties', 'toggleInspector'),
+        {type: 'separator'},
         entry('Einpassen', 'Fit to View', 'fit'),
         entry('Vergrößern', 'Zoom In', 'zoomIn'),
         entry('Verkleinern', 'Zoom Out', 'zoomOut'),
@@ -96,6 +109,45 @@ app.whenReady().then(async () => {
 });
 app.on('window-all-closed',()=>app.quit());
 ipcMain.handle('piwire',async(event,action,data={})=>{if(event.sender!==win.webContents||event.senderFrame!==win.webContents.mainFrame)throw Error(label('Ungültiger Aufruf.', 'Invalid request.'));switch(action){
+case 'copyComponent': {
+  if (typeof data.text !== 'string' || Buffer.byteLength(data.text) > 100_000) return false;
+  clipboard.writeBuffer('de.piwire.component', Buffer.from(data.text));
+  return true;
+}
+case 'pasteComponent': {
+  const value = clipboard.readBuffer('de.piwire.component');
+  return value.length && value.length <= 100_000 ? value.toString() : null;
+}
+case 'symbolLibrary': {
+  const library = path.join(app.getPath('userData'), 'symbols.json');
+  if (typeof data.text === 'string' && Buffer.byteLength(data.text) <= 2_000_000) {
+    await fs.mkdir(path.dirname(library), {recursive:true});
+    const temporary = library + '.tmp';
+    await fs.writeFile(temporary, data.text);
+    await fs.rename(temporary, library);
+  }
+  try { return await fs.readFile(library, 'utf8'); }
+  catch (error) { if (error.code !== 'ENOENT') throw error; return '[]'; }
+}
+case 'saveSymbol': {
+  if (typeof data.text !== 'string' || Buffer.byteLength(data.text) > 100_000) return false;
+  const target = await dialog.showSaveDialog(win, {
+    defaultPath: safeName(data.name) + '.piwire-symbol',
+    filters: [{name: 'PiWire Symbol', extensions: ['piwire-symbol']}],
+  });
+  if (target.canceled) return false;
+  await fs.writeFile(target.filePath, data.text);
+  return true;
+}
+case 'openSymbol': {
+  const source = await dialog.showOpenDialog(win, {
+    filters: [{name: 'PiWire Symbol', extensions: ['piwire-symbol', 'json']}], properties: ['openFile'],
+  });
+  if (source.canceled) return null;
+  const file = source.filePaths[0];
+  if ((await fs.stat(file)).size > 100_000) throw Error(label('Datei zu groß.', 'File is too large.'));
+  return {text: await fs.readFile(file, 'utf8')};
+}
 case 'preferences': {
   const settings = preferences(data);
   if (data.language) buildMenus();

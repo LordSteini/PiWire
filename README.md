@@ -1,45 +1,46 @@
-# PiWire
+# PiWire 2.2.0
 
-**Draw, document, and share Raspberry Pi GPIO wiring diagrams.**
+PiWire is a desktop editor for drawing Raspberry Pi GPIO schematics. Place components, connect pins, adjust wire routes, and share the result as an editable project, PDF, or SVG. The editor works offline. The interface and introductory tour are available in German and English.
 
-PiWire is an offline desktop schematic editor for Raspberry Pi projects with a standard 40-pin header. Drop components onto the canvas, connect their pins, and export a clean vector diagram for a build guide or project README. The editor is available in German and English.
+[Download the latest release](https://github.com/LordSteini/PiWire/releases/latest) · [German user guide](docs/handbuch.md) · [Release notes](docs/piwire-2.2.0.md)
 
-[Download PiWire](https://github.com/LordSteini/PiWire/releases/latest) · [Open the LED example](Source/Beispiel-LED.piwire) · [View the SVG export](Source/Beispiel-Schaltplan.svg)
+![PiWire editor on macOS showing the traffic-light schematic with a selected wire](docs/screenshots/02-ampel-editor.webp)
 
-![PiWire SVG export showing GPIO17 wired to an LED through a 220 Ω resistor](Source/Beispiel-Schaltplan.svg)
+## Install
 
-## Downloads
+| Platform | PiWire 2.2.0 package | How to start |
+| --- | --- | --- |
+| macOS 13+ on Apple Silicon or Intel | [Universal DMG](https://github.com/LordSteini/PiWire/releases/download/v2.2.0/PiWire-2.2.0-macOS-universal.dmg) | Drag PiWire into Applications, then open it there. |
+| Windows 10/11 x64 | [Portable ZIP](https://github.com/LordSteini/PiWire/releases/download/v2.2.0/PiWire-2.2.0-Windows-x64.zip) | Extract the whole folder and open `PiWire.exe`. |
+| Linux desktop x86-64 | [Portable TAR.GZ](https://github.com/LordSteini/PiWire/releases/download/v2.2.0/PiWire-2.2.0-Linux-x64.tar.gz) | Extract the folder and run `./start-piwire.sh` as your regular user in a graphical session. |
 
-| Platform | Download | How to start | Test status |
-| --- | --- | --- | --- |
-| macOS 13+ · Apple Silicon and Intel | [Universal DMG](https://github.com/LordSteini/PiWire/releases/download/v2.1.0/PiWire-2.1.0-macOS-universal.dmg) | Open the disk image and drag `PiWire.app` into Applications. See [first launch on macOS](#first-launch-on-macos) if prompted. | App launch and editor tested on Apple Silicon |
-| Windows 10/11 · x64 | [Windows ZIP](https://github.com/LordSteini/PiWire/releases/download/v2.1.0/PiWire-2.1.0-Windows-x64.zip) | Extract the whole archive and open `PiWire.exe`. | Launch test pending |
-| Linux desktop · x86-64 | [Linux TAR.GZ](https://github.com/LordSteini/PiWire/releases/download/v2.1.0/PiWire-2.1.0-Linux-x64.tar.gz) | Extract the archive and run `./start-piwire.sh` from the extracted directory. | 2.1.0 launch test pending (2.0.1 launched on Zorin OS) |
+[SHA-256 checksums](https://github.com/LordSteini/PiWire/releases/download/v2.2.0/SHA256SUMS.txt) · [Apple’s guide to opening an app on macOS](https://support.apple.com/en-us/102445)
 
-All three builds report version **2.1.0** and share the same editor and project format. PiWire can check GitHub for updates at startup. Choose the interface language and manage update checks in Settings. Linux requires an x86-64 desktop with Chromium runtime libraries and sandbox support. Raspberry Pi OS on ARM is outside the supported download targets.
+## First schematic
 
-### First launch on macOS
+The seven-step tour uses an **editable traffic light with three LEDs, a pedestrian button, and a shared ground**. Use **End Tour** or **Esc** at any step. After the first tour, the example stays open for editing. Replay it from **Settings → Start Introduction** and return to your current project afterward. On later starts, **New Schematic** opens with the Raspberry Pi and all 40 physical header pins.
 
-1. Download and open the macOS DMG, drag `PiWire.app` into Applications, and open it there. If you previously installed `PiWire 2.app`, quit it and remove the old bundle before opening the new version.
-2. If macOS blocks PiWire because the developer cannot be verified, open **System Settings → Privacy & Security** (**Systemeinstellungen → Datenschutz & Sicherheit**).
-3. In the **Security** section, click **Open Anyway** (**Dennoch öffnen**) for PiWire and confirm the prompt. macOS remembers this exception for the app.
+[Editable traffic light](Source/Beispiel-Ampel.piwire) · [Simpler LED example](Source/Beispiel-LED.piwire) · [Sample SVG export](Source/Beispiel-Schaltplan.svg)
 
-[Apple’s guide to opening apps on macOS](https://support.apple.com/en-us/102445)
+| Introduction | Custom symbol editor |
+| --- | --- |
+| ![First step of the PiWire tour with the traffic-light example](docs/screenshots/01-einfuehrung.webp) | ![PiWire’s custom symbol editor showing a temperature-sensor symbol and two terminals](docs/screenshots/03-symbol-editor.webp) |
 
-## Draw your first diagram
+## Features
 
-1. Open `Beispiel-LED.piwire` with **Öffnen**, or choose a component from the palette to start from scratch.
-2. Click one pin and then another to connect them. Click the grid in between to add bends, or press **Esc** to cancel.
-3. Use the right sidebar to edit names and values. Press **R** to rotate a selected component.
-4. Save the editable `.piwire` file or export it as **PDF** or **SVG**.
+- **GPIO layout.** Choose physical header pins individually or as ranges. The editor shows GPIO and alternate-function labels and aligns terminals to the grid.
+- **Routing and junctions.** Connect terminals, place corners on the grid, drag wire segments or corner handles, and connect to an existing wire to create a junction. Shift-click starts from an existing wire. Automatic routing looks for separate tracks and uses a gap to mark unconnected crossings.
+- **Component editing.** Use 34 built-in templates including resistors, LEDs, passive parts, relays, switches, power sources, test instruments, and GPIO modules. Resistance appears inside the symbol. Customize LED colors and hide component names or values independently.
+- **Own symbols.** Draw lines, rectangles and ellipses, then place named terminals. Save symbols in the local palette, share editable `.piwire-symbol` files, or export a vector SVG. Projects carry the geometry of custom symbols they use.
+- **Workspace.** Collapse the palette and inspector, rename a project by clicking its title, copy and paste components, and undo or redo edits. Native menus group file actions, view controls and help.
+- **Project files and exports.** Save an editable `.piwire` project or create a monochrome A4 PDF or SVG. On macOS, PiWire registers as an editor for its project files and provides a document icon plus a Quick Look thumbnail extension.
+- **Settings and help.** Switch between German and English, control GitHub update checks, reopen the tour, or browse the help by topic.
 
-PiWire includes **26 component templates** and supports custom modules with up to 40 connectors. The GPIO block shows physical pin numbers and BCM functions. Choose which pins appear to keep small diagrams readable. SVG and single-page A4 PDF exports use black vector symbols on a white background.
-
-PiWire draws schematics. For voltage, current limits, and pin assignments, check your board and module datasheets.
+PiWire is a drawing tool. The reference for pinouts and electrical limits is the datasheet of the board or component you are using. The palette uses IEC-style symbols.
 
 ## Build from source
 
-The shared editor lives in [`Source/web/`](Source/web). macOS uses Swift and system WebKit. Windows and Linux use Electron.
+The shared editor lives in [`Source/web/`](Source/web/). macOS uses Swift and system WebKit. The Windows and Linux builds bundle a pinned Electron runtime.
 
 ```sh
 cd Source
@@ -49,8 +50,6 @@ python3 build.py windows
 python3 build.py linux
 ```
 
-Run only the build command for the platform you want to package. The macOS build needs Xcode Command Line Tools. Windows and Linux packaging downloads the pinned Electron runtime and verifies its SHA-256 checksum. Build output goes to `Source/build/`. To create a release archive after building, run `python3 package.py windows ../dist` or `python3 package.py linux ../dist`. The macOS build produces the DMG directly.
+The macOS build requires the Xcode Command Line Tools. `python3 build.py mac-dev` builds a separate local test app. Windows and Linux builds verify the Electron archive checksum. To stage release artifacts, run `python3 package.py <mac|windows|linux> ../release-assets` after each build.
 
-## License
-
-PiWire is available under the [MIT License](LICENSE). The Windows and Linux packages also include Electron and Chromium license notices.
+[MIT License](LICENSE)

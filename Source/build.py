@@ -1,17 +1,54 @@
 #!/usr/bin/env python3
-"""Build PiWire 2: python3 build.py mac|windows|linux. No third-party Python packages."""
-import sys, pathlib, subprocess, shutil, urllib.request, zipfile, hashlib, plistlib, tempfile
+"""Build PiWire 2: python3 build.py mac|mac-dev|windows|linux. No third-party Python packages."""
+import sys, pathlib, subprocess, shutil, urllib.request, zipfile, hashlib, plistlib, tempfile, re
 base=pathlib.Path(__file__).resolve().parent
 platform=sys.argv[1] if len(sys.argv)>1 else 'mac'
-out=base/'build'/platform
+variant=sys.argv[2] if platform=='mac-dev' and len(sys.argv)>2 else ''
+if variant and not re.fullmatch(r'[a-z0-9-]+',variant):
+ raise SystemExit('Invalid local build name')
+out=base/'build'/(platform+'-'+variant if variant else platform)
 out.mkdir(parents=True,exist_ok=True)
-if platform=='mac':
- app=out/'PiWire.app'/'Contents';(app/'MacOS').mkdir(parents=True,exist_ok=True);(app/'Resources').mkdir(exist_ok=True)
+if platform in ('mac','mac-dev'):
+ development=platform=='mac-dev'
+ name=('PiWire Test'+(' '+variant.capitalize() if variant else '')) if development else 'PiWire'
+ app=out/(name+'.app')/'Contents';(app/'MacOS').mkdir(parents=True,exist_ok=True);(app/'Resources').mkdir(exist_ok=True)
+ thumbnail=app/'PlugIns/PiWireThumbnail.appex/Contents'
+ (thumbnail/'MacOS').mkdir(parents=True,exist_ok=True)
+ (thumbnail/'Resources').mkdir(exist_ok=True)
  for arch in ['arm64','x86_64']:
   subprocess.run(['swiftc',str(base/'mac.swift'),str(base/'mac-updates.swift'),'-module-cache-path',str(base/'build/cache'),'-target',arch+'-apple-macosx13.0','-framework','Cocoa','-framework','WebKit','-o',str(out/arch)],check=True)
+  subprocess.run(['swiftc','-parse-as-library','-module-name','PiWireThumbnail',str(base/'mac-thumbnail.swift'),
+                  '-module-cache-path',str(base/'build/cache'),'-target',arch+'-apple-macosx13.0',
+                  '-Xlinker','-e','-Xlinker','_NSExtensionMain','-o',str(out/('thumbnail-'+arch))],check=True)
  subprocess.run(['lipo','-create',str(out/'arm64'),str(out/'x86_64'),'-output',str(app/'MacOS/PiWire2')],check=True)
  shutil.copy(base/'Info.plist',app/'Info.plist');shutil.copy(base/'AppIcon.icns',app/'Resources/AppIcon.icns');shutil.copytree(base/'web',app/'Resources/web',dirs_exist_ok=True)
- subprocess.run(['codesign','--force','--deep','--sign','-',str(app.parent)],check=True)
+ shutil.copy(base/'packaging/PiWireDocument.icns',app/'Resources/PiWireDocument.icns')
+ info=plistlib.loads((app/'Info.plist').read_bytes())
+ if development:
+  identifier=info['CFBundleIdentifier']+'.local'+('.'+variant if variant else '')
+  info.update(CFBundleIdentifier=identifier,CFBundleName=name,CFBundleDisplayName=name,PiWireLocalBuild=True)
+  (app/'Info.plist').write_bytes(plistlib.dumps(info,sort_keys=False))
+ thumbnail_info={
+  'CFBundleIdentifier':info['CFBundleIdentifier']+'.thumbnail',
+  'CFBundleName':'PiWire Thumbnail', 'CFBundlePackageType':'XPC!', 'CFBundleExecutable':'PiWireThumbnail',
+  'CFBundleShortVersionString':info['CFBundleShortVersionString'], 'CFBundleVersion':info['CFBundleVersion'],
+  'LSMinimumSystemVersion':info['LSMinimumSystemVersion'],
+  'NSExtension':{
+   'NSExtensionPointIdentifier':'com.apple.quicklook.thumbnail',
+   'NSExtensionPrincipalClass':'PiWireThumbnail.ThumbnailProvider',
+   'NSExtensionAttributes':{'QLSupportedContentTypes':['de.piwire.project'],'QLThumbnailMinimumDimension':32},
+  },
+ }
+ (thumbnail/'Info.plist').write_bytes(plistlib.dumps(thumbnail_info))
+ shutil.copy(base/'web/core.js',thumbnail/'Resources/core.js')
+ subprocess.run(['lipo','-create',str(out/'thumbnail-arm64'),str(out/'thumbnail-x86_64'),
+                 '-output',str(thumbnail/'MacOS/PiWireThumbnail')],check=True)
+ subprocess.run(['codesign','--force','--sign','-','--entitlements',
+                 str(base/'packaging/thumbnail-entitlements.plist'),str(thumbnail.parent)],check=True)
+ subprocess.run(['codesign','--force','--sign','-',str(app.parent)],check=True)
+ if development:
+  print('Built:',app.parent)
+  sys.exit(0)
  with (app/'Info.plist').open('rb') as plist:
   version=plistlib.load(plist)['CFBundleShortVersionString']
  image=out/f'PiWire-{version}-macOS-universal.dmg'
@@ -44,7 +81,7 @@ elif platform in ['windows','linux']:
  for p in (base/'electron').glob('*'):
   if p.suffix in ('.cjs', '.json'):shutil.copy2(p,dest/p.name)
  (out/'resources/default_app.asar').unlink(missing_ok=True)
- for name in ('START-HIER.txt', 'Beispiel-LED.piwire', 'Beispiel-Schaltplan.svg'):
+ for name in ('START-HIER.txt', 'Beispiel-LED.piwire', 'Beispiel-Ampel.piwire', 'Beispiel-Schaltplan.svg'):
   shutil.copy2(base/name,out/name)
  launcher='Diagnose-PiWire.cmd' if platform=='windows' else 'start-piwire.sh'
  shutil.copy2(base/'launchers'/launcher,out/launcher)
@@ -52,5 +89,5 @@ elif platform in ['windows','linux']:
  old,new=('electron.exe','PiWire.exe') if platform=='windows' else ('electron','piwire')
  if (out/new).exists():(out/new).unlink()
  (out/old).rename(out/new)
-else:raise SystemExit('Usage: python3 build.py mac|windows|linux')
+else:raise SystemExit('Usage: python3 build.py mac|mac-dev|windows|linux')
 print('Built:',out)
