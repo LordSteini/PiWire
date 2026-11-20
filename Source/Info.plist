@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDisplayName</key>
-	<string>PiWire 2</string>
+	<string>PiWire</string>
 	<key>CFBundleExecutable</key>
 	<string>PiWire2</string>
 	<key>CFBundleIconFile</key>
@@ -11,13 +11,13 @@
 	<key>CFBundleIdentifier</key>
 	<string>de.piwire.desktop2</string>
 	<key>CFBundleName</key>
-	<string>PiWire 2</string>
+	<string>PiWire</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.0</string>
+	<string>2.1.0</string>
 	<key>CFBundleVersion</key>
-	<string>2</string>
+	<string>2.1.0</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>13.0</string>
 	<key>NSHighResolutionCapable</key>

@@ -1,14 +1,15 @@
-PiWire 2 — Schaltplanstudio
+PiWire 2.1.0 — Schaltplanstudio
 
 NEU
-• Elektrische Symbole im Editor statt Bauteilkarten.
-• Symbol und Name nebeneinander in der Seitenleiste.
+• Deutsch und Englisch mit Wahl der Sprache in den Einstellungen.
+• Automatische Suche nach GitHub-Updates beim Start.
+• „Speichern unter“ mit Formatwahl: PiWire-Projekt, PDF oder SVG.
 • PDF und SVG als schwarze Vektorschaltpläne auf weißem Grund, ohne Raster.
 • Drehbare Symbole, bearbeitbare Werte, eigener GPIO-Ausschnitt.
 • Identischer Editor und identisches Dateiformat auf allen drei Plattformen.
 
 START
-macOS: ZIP entpacken, PiWire 2.app öffnen oder nach Programme ziehen.
+macOS: DMG öffnen, PiWire.app nach Programme ziehen und dort starten.
 Universal-Binary für Apple Silicon und Intel, macOS 13 oder neuer.
 Lokal ad-hoc signiert, nicht Apple-notarisiert. Falls macOS den Start des
 Downloads blockiert: nach dem ersten Startversuch unter Systemeinstellungen >
@@ -87,13 +88,12 @@ PDF-Export geprüft. PDF: eine A4-Seite, Vektoren und auslesbarer Text.
 Gemeinsames Datenmodell getestet: 26 Vorlagen, Drehungen, JSON-Roundtrip,
 ungültige Pins, Hindernisumgehung, Text-Escaping und Schwarz-Weiß-Export.
 Windows-PE- und Linux-ELF-Pakete erstellt, Laufzeit-Prüfsummen verifiziert.
-Windows/Linux 2.0.1: Electron-Host und Starter aktualisiert. Für diese
-Pakete wurden Archivstruktur und Datenmodell geprüft. Der Start auf den
-Zielsystemen steht noch aus.
+Für Windows und Linux wurden Archivstruktur und Datenmodell geprüft.
+Der Start von Version 2.1.0 auf den Zielsystemen steht noch aus.
 
 QUELLCODE
-Separates Quellcodepaket: web/ (Editor), mac.swift (Mac-Host), electron/
-(Windows-/Linux-Host), test.cjs und build.py.
+Quellcode auf GitHub: web/ (Editor), mac*.swift (Mac-Host), electron/
+(Windows-/Linux-Host), test.cjs, build.py und package.py.
 Test: node test.cjs. Build: python3 build.py mac|windows|linux.
 Mac-Build benötigt Apple Command Line Tools. Windows/Linux-Paketierung lädt
 offizielle Electron-Binaries und benötigt Internet, aber keine npm-Pakete.

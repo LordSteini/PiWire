@@ -1,0 +1,59 @@
+name: Publish PiWire 2.1.0
+
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/release-2.1.0.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: piwire-v2.1.0
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: macos-15
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test, build and package
+        run: |
+          set -euo pipefail
+          cd Source
+          test "$(node -p "require('./electron/package.json').version")" = "2.1.0"
+          node test.cjs
+          for platform in mac windows linux; do
+            python3 build.py "$platform"
+            python3 package.py "$platform" ../release-assets
+          done
+          cd ../release-assets
+          hdiutil verify PiWire-2.1.0-macOS-universal.dmg
+          unzip -tq PiWire-2.1.0-Windows-x64.zip
+          tar -tzf PiWire-2.1.0-Linux-x64.tar.gz > /dev/null
+          shasum -a 256 PiWire-2.1.0-* > SHA256SUMS.txt
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          version=v2.1.0
+          if gh release view "$version" --json isDraft --jq '.isDraft' > draft-status; then
+            if [ "$(cat draft-status)" != true ]; then
+              echo "PiWire 2.1.0 is already published"
+              exit 0
+            fi
+          else
+            gh release create "$version" --target "$GITHUB_SHA" --draft --title "PiWire 2.1.0" --notes-file - <<'NOTES'
+          - Optional GitHub update checks at startup, with download and platform-specific installation instructions.
+          - German and English with system language detection and an in-app setting.
+          - Native menus with Save As for PiWire projects, PDF and SVG.
+          - Universal macOS DMG with drag-and-drop installation.
+          
+          Open the DMG on macOS and drag PiWire into Applications. Windows and Linux use the same portable ZIP and TAR.GZ formats as before. Extract the whole archive, then open `PiWire.exe` on Windows or run `./start-piwire.sh` on Linux. The Windows and Linux 2.1.0 packages have been verified as archives. Launch tests on those platforms are pending.
+          NOTES
+          fi
+          gh release upload "$version" release-assets/* --clobber
+          gh release edit "$version" --draft=false --latest
