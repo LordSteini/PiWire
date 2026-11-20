@@ -2,9 +2,9 @@
 
 PiWire is a desktop editor for drawing Raspberry Pi GPIO schematics. Place components, connect pins, adjust wire routes, and share the result as an editable project, PDF, or SVG. The editor works offline. The interface and introductory tour are available in German and English.
 
-[Download the latest release](https://github.com/LordSteini/PiWire/releases/latest) · [German user guide](docs/handbuch.md) · [Release notes](docs/piwire-2.2.0.md)
+[Download the latest release](https://github.com/LordSteini/PiWire/releases/latest) · [User guide](docs/user-guide.md) · [Deutsch](docs/handbuch.md) · [Release notes](docs/piwire-2.2.0.md)
 
-![PiWire editor on macOS showing the traffic-light schematic with a selected wire](docs/screenshots/02-ampel-editor.webp)
+![PiWire editor on macOS showing the traffic-light schematic with a selected wire](docs/screenshots/02-traffic-light-editor.webp)
 
 ## Install
 
@@ -24,7 +24,7 @@ The seven-step tour uses an **editable traffic light with three LEDs, a pedestri
 
 | Introduction | Custom symbol editor |
 | --- | --- |
-| ![First step of the PiWire tour with the traffic-light example](docs/screenshots/01-einfuehrung.webp) | ![PiWire’s custom symbol editor showing a temperature-sensor symbol and two terminals](docs/screenshots/03-symbol-editor.webp) |
+| ![First step of the PiWire tour with the traffic-light example](docs/screenshots/01-introduction.webp) | ![PiWire’s custom symbol editor showing a temperature-sensor symbol and two terminals](docs/screenshots/03-custom-symbol-editor.webp) |
 
 ## Features
 

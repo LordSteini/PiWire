@@ -1,0 +1,42 @@
+PiWire 2.2.0
+
+GET STARTED
+Open PiWire to follow the seven-step traffic-light introduction. Use Esc or
+End tour at any step. Choose Settings > Start introduction to replay it.
+On later starts, PiWire opens a new schematic with all 40 Raspberry Pi pins.
+
+MACOS
+Open the universal DMG and drag PiWire into Applications. Launch it there.
+PiWire requires macOS 13 or later and supports Apple Silicon and Intel.
+A double-click on a .piwire file opens the app assigned to it in Finder.
+Finder can show the circuit thumbnail when Show icon preview is enabled.
+
+WINDOWS
+Extract the entire ZIP and open PiWire.exe. Keep the files together.
+If it does not start, run Diagnose-PiWire.cmd in the extracted folder.
+The log is saved to %TEMP%\PiWire-Start.log.
+
+LINUX
+Extract the TAR.GZ. From a graphical session, run ./start-piwire.sh as your
+regular user. Electron requires the Chromium runtime libraries and sandbox
+support for your distribution. To capture a startup log, run:
+
+    ./start-piwire.sh --enable-logging > piwire-start.log 2>&1
+
+DRAW AND SHARE
+Choose components from the palette. Click two terminals to connect them.
+Click the grid while drawing to place a corner. Select a wire to reveal its
+corner handles. Click an existing wire to create a junction, or Shift-click
+it to start from there. Component names, labels, and LED colors are editable
+in Properties. Click the project title to rename the schematic.
+
+Use File > Save As for an editable .piwire project, A4 PDF, or scalable SVG.
+Choose Custom symbols to draw templates and share them as .piwire-symbol.
+PDF and SVG exports use monochrome drawing lines.
+
+EXAMPLES AND HELP
+Open Beispiel-Ampel.piwire for the traffic light or Beispiel-LED.piwire for
+a smaller circuit. PiWire Help includes the quick start and shortcuts.
+
+English user guide: https://github.com/LordSteini/PiWire/blob/main/docs/user-guide.md
+German quick start: START-HIER.txt

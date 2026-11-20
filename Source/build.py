@@ -81,7 +81,7 @@ elif platform in ['windows','linux']:
  for p in (base/'electron').glob('*'):
   if p.suffix in ('.cjs', '.json'):shutil.copy2(p,dest/p.name)
  (out/'resources/default_app.asar').unlink(missing_ok=True)
- for name in ('START-HIER.txt', 'Beispiel-LED.piwire', 'Beispiel-Ampel.piwire', 'Beispiel-Schaltplan.svg'):
+ for name in ('START-HERE.txt', 'START-HIER.txt', 'Beispiel-LED.piwire', 'Beispiel-Ampel.piwire', 'Beispiel-Schaltplan.svg'):
   shutil.copy2(base/name,out/name)
  launcher='Diagnose-PiWire.cmd' if platform=='windows' else 'start-piwire.sh'
  shutil.copy2(base/'launchers'/launcher,out/launcher)

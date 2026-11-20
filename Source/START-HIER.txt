@@ -1,5 +1,7 @@
 PiWire 2.2.0 — Schaltplanstudio
 
+English quick start: START-HERE.txt
+
 NEU
 • Einführung mit Ampelschaltung und Fußgängertaster beim ersten Start.
 • Klappbare Seitenleisten, gegliederte Hilfe und direktes Umbenennen.

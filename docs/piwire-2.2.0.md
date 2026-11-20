@@ -1,33 +1,31 @@
-# PiWire 2.2.0
+## Getting started and workspace
 
-## Einführung und Arbeitsplatz
+- **First-launch tour** with seven skippable steps and an editable traffic-light circuit.
+- **Replay the introduction** from Settings and return to your current project afterward.
+- **New schematics** start with a Raspberry Pi and all 40 physical header pins.
+- **Collapsible sidebars**, a compact toolbar, and native file menus.
+- **Quick renaming** from the project title, the component inspector, or with F2.
+- **Topic-based help** with a quick start and keyboard shortcuts.
 
-- **Erststart-Tour** mit sieben jederzeit abbrechbaren Schritten und einer bearbeitbaren Ampelschaltung.
-- **Tour erneut starten** über die Einstellungen, mit Rückkehr zum aktuellen Projekt.
-- **Neuer Schaltplan** mit Raspberry Pi und allen 40 physischen Pins.
-- **Klappbare Seitenleisten**, kompakte Werkzeugleiste und Dateiaktionen in der nativen Menüleiste.
-- **Direkt umbenennen** über den Projekttitel, im Bauteilinspektor oder per F2.
-- **Hilfe nach Thema** mit Schnellstart und Tastenkürzeln.
+## Schematics and components
 
-## Schaltpläne und Bauteile
+- **Wire editing** with draggable segments and corner handles, wire-to-wire connections, automatic junctions, and separated routes.
+- **Grid-aligned GPIO**, **values inside resistor symbols**, **custom LED colors**, and independent controls for displaying names and values.
+- **Copy and paste components** with Ctrl+C / Ctrl+V or ⌘C / ⌘V.
+- **34 built-in templates**, including an inductor, transformer, changeover switch, normally closed contact, Zener diode, operational amplifier, voltmeter, and ammeter.
+- **Custom symbol editor** with lines, rectangles, ellipses, and named terminals. Save templates in the palette, share them as `.piwire-symbol`, or export them as SVG.
 
-- **Leitungsbearbeitung** mit ziehbaren Segmenten und Eckgriffen, Leitung-zu-Leitung-Verbindungen, automatischen Knoten und getrennten Routen.
-- **GPIO am Raster**, **Widerstandswerte im Schaltsymbol**, **einstellbare LED-Farben** und **einzeln ausblendbare Namen und Werte**.
-- **Kopieren und Einfügen** für Bauteile über Strg+C / Strg+V oder ⌘C / ⌘V.
-- **34 eingebaute Vorlagen**, darunter Spule, Transformator, Wechselschalter, Öffnerkontakt, Zenerdiode, Operationsverstärker, Voltmeter und Amperemeter.
-- **Eigener Symbol-Editor** mit Linien, Rechtecken, Ellipsen und benannten Anschlüssen. Vorlagen lassen sich in der Palette speichern, als `.piwire-symbol` austauschen und als SVG exportieren.
+## macOS and downloads
 
-## macOS und Downloads
-
-- **Finder-Integration** für `.piwire` mit Dokument-Icon und Quick-Look-Miniatur.
-- **macOS** als Universal-DMG, **Windows x64** als portables ZIP und **Linux x86-64** als TAR.GZ. Die SHA-256-Prüfsummen liegen beim Release.
+- **Finder integration** for `.piwire` files with a document icon and a Quick Look thumbnail.
+- **Universal DMG for macOS**, **portable ZIP for Windows x64**, and **TAR.GZ for Linux x86-64**. SHA-256 checksums are included with the release.
 
 ## Screenshots
 
-[Benutzerhandbuch](https://github.com/LordSteini/PiWire/blob/v2.2.0/docs/handbuch.md) · [Ampelschaltung als bearbeitbares Projekt](https://github.com/LordSteini/PiWire/blob/v2.2.0/Source/Beispiel-Ampel.piwire)
+[English user guide](https://github.com/LordSteini/PiWire/blob/main/docs/user-guide.md) · [Editable traffic-light schematic](https://github.com/LordSteini/PiWire/blob/main/Source/Beispiel-Ampel.piwire)
 
-![Erststart-Tour mit der Ampelschaltung](https://raw.githubusercontent.com/LordSteini/PiWire/v2.2.0/docs/screenshots/01-einfuehrung.webp)
+![First-launch introduction with the traffic-light schematic](https://raw.githubusercontent.com/LordSteini/PiWire/main/docs/screenshots/01-introduction.webp)
 
-![Ampelschaltung mit ausgewählter Leitung im PiWire-Editor](https://raw.githubusercontent.com/LordSteini/PiWire/v2.2.0/docs/screenshots/02-ampel-editor.webp)
+![Traffic-light schematic with a selected wire in PiWire](https://raw.githubusercontent.com/LordSteini/PiWire/main/docs/screenshots/02-traffic-light-editor.webp)
 
-![Eigener Symbol-Editor mit Temperaturfühler](https://raw.githubusercontent.com/LordSteini/PiWire/v2.2.0/docs/screenshots/03-symbol-editor.webp)
+![Custom symbol editor with a temperature sensor](https://raw.githubusercontent.com/LordSteini/PiWire/main/docs/screenshots/03-custom-symbol-editor.webp)
